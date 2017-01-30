@@ -6,6 +6,7 @@ $(document).ready(function() {
 
   socket.on('chat message', function(msg){
     people.push(msg);
+    console.log(people);
   });
 
   var yourX = 0;
@@ -41,6 +42,7 @@ $(document).ready(function() {
     } else if (keyCode === 40) {
       rect(x, y+(w/2), w/4, w/4);
       rect(x+3*(w/4), y+(w/2), w/4, w/4);
+    }
 
   }
 
@@ -97,17 +99,19 @@ $(document).ready(function() {
 
     // ctx.fillStyle = "blue";
     // rect(yourX, yourY, yourW, yourH);
-    people.forEach(function(person) {
-      avatar(Math.floor(Math.random()*800), Math.floor(Math.random()*300), yourW, keyCode);
-      wrapText(person, Math.floor(Math.random()*800)+yourW, Math.floor(Math.random()*300), 200, 15);
-    })
-
     avatar(yourX, yourY, yourW, keyCode);
 
     ctx.fillStyle = "red";
     ctx.font = "20px Silkscreen";
     ctx.fillText("x: " + yourX + " y: " + yourY ,10,50);
     wrapText("hello!", yourX+yourW, yourY, 200, 15);
+
+
+    people.forEach(function(person) {
+      avatar(Math.floor(Math.random()*800), Math.floor(Math.random()*300), yourW, keyCode);
+      wrapText(person, Math.floor(Math.random()*800)+yourW, Math.floor(Math.random()*300), 200, 15);
+    })
+
 
   });
 
