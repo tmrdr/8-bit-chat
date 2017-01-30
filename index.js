@@ -29,7 +29,8 @@ io.on('connection', function(socket){
     socket.broadcast.emit('newPlayer', {
       id: newPlayerData.id,
       x: newPlayerData.x,
-      y: newPlayerData.y
+      y: newPlayerData.y,
+      message: newPlayerData.message
     });
   });
 

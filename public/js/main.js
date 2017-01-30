@@ -6,6 +6,7 @@ $(document).ready(function() {
 
   // players[socketID] = { x: __, y: __, name: __, message: __, colors: { hair, skin, top, bottom } }
   var players = {}; // list of all connected players and relevant data
+  console.log(players);
 
   var bit = 10; // size of one "pixel"
   var yourW = bit*4; // avatar width
@@ -23,7 +24,7 @@ $(document).ready(function() {
       x: yourX,
       y: yourY,
       message: ""
-    });
+    }); // make sure emit parameters corresponds with back-end socket stuff
   });
 
   // take in initial coordinates and other user data
@@ -32,9 +33,11 @@ $(document).ready(function() {
   });
 
   function addPlayer(playerId, x, y, message) {
-    players[playerId].x = x;
-    players[playerId].y = y;
-    players[playerId].message = message;
+    players[playerId] = {
+      x: x,
+      y: y,
+      message: message
+    }
     console.log(players);
   }
 
@@ -136,7 +139,7 @@ $(document).ready(function() {
     ctx.fillStyle = "red";
     ctx.font = "20px Silkscreen";
     ctx.fillText("x: " + yourX + " y: " + yourY ,10,50);
-    wrapText("hello!", yourX+yourW, yourY, 200, 15);
+    wrapText(message, yourX+yourW, yourY, 200, 15);
 
 
     // people.forEach(function(person) {
