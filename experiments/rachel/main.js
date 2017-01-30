@@ -35,6 +35,26 @@ $(document).ready(function() {
 
   }
 
+  function wrapText(text, x, y, maxWidth, lineHeight) {
+    var words = text.split(' ');
+    var line = '';
+
+    for(var n = 0; n < words.length; n++) {
+      var testLine = line + words[n] + ' ';
+      var metrics = ctx.measureText(testLine);
+      var testWidth = metrics.width;
+      if (testWidth > maxWidth && n > 0) {
+        ctx.fillText(line, x, y);
+        line = words[n] + ' ';
+        y += lineHeight;
+      }
+      else {
+        line = testLine;
+      }
+    }
+    ctx.fillText(line, x, y);
+  }
+
 
   $(document).keydown(function(event) {
     // console.log( ".keydown() code:", event.keyCode );
@@ -73,6 +93,7 @@ $(document).ready(function() {
     ctx.fillStyle = "red";
     ctx.font = "20px Silkscreen";
     ctx.fillText("x: " + yourX + " y: " + yourY ,10,50);
+    wrapText("lol hi guys", yourX+yourW, yourY, 50, 15);
 
   });
 
