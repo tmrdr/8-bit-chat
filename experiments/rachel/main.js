@@ -1,55 +1,78 @@
 $(document).ready(function() {
   var ctx = $('#canvas')[0].getContext("2d");
 
-  var youX = 0;
-  var youY = 0;
-  var youW = 10;
-  var youH = 10;
-  var youSpeed = 10;
+  var yourX = 0;
+  var yourY = 0;
+  var yourW = 40;
+  var yourH = 120;
+  var yourSpeed = 10;
 
-  function rect(x,y,w,h) {
+  function rect(x, y, w, h) {
     ctx.beginPath();
     ctx.rect(x,y,w,h);
     ctx.closePath();
     ctx.fill();
   }
 
+  function avatar(x, y, w, keyCode) {
+    ctx.fillStyle = 'chocolate';
+    rect(x, y, w, w);
+    ctx.fillStyle = 'red';
+    rect(x, y+w, w, w);
+    ctx.fillStyle = 'blue';
+    rect(x, y+(w*2), w, w);
+    ctx.fillStyle = 'black';
+    rect(x, y, w, w/4);
+
+    ctx.fillStyle = 'black';
+    if (keyCode === 37) {
+      rect(x, y+(w/2), w/4, w/4);
+      rect(x+(w/2), y+(w/2), w/4, w/4);
+    } else if (keyCode === 39) {
+      rect(x+(w/4), y+(w/2), w/4, w/4);
+      rect(x+3*(w/4), y+(w/2), w/4, w/4);
+    }
+
+  }
+
+
   $(document).keydown(function(event) {
     // console.log( ".keydown() code:", event.keyCode );
     var keyCode = event.keyCode;
 
-    // ctx.clearRect(youX, youY, 10, 10); // clears just the rectangle but not the text
+    // ctx.clearRect(yourX, yourY, 10, 10); // clears just the rectangle but not the text
     ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
 
     switch(keyCode) {
       case 37: // left arrow: keyCode 37
-      if (youX > 0) {
-        youX -= youSpeed;
-      }
+        if (yourX > 0) {
+          yourX -= yourSpeed;
+        }
         break;
       case 38: // up arrow: keyCode 38
-      if (youY > 0) {
-        youY -= youSpeed;
-      }
+        if (yourY > 0) {
+          yourY -= yourSpeed;
+        }
         break;
       case 39: // right arrow: keyCode 39
-      if (youX+youW < canvas.width) {
-        youX += youSpeed;
-      }
+        if (yourX+yourW < canvas.width) {
+          yourX += yourSpeed;
+        }
         break;
       case 40: // down arrow: keyCode 40
-      if (youY+youH < canvas.height) {
-        youY += youSpeed;
-      }
+        if (yourY+yourH < canvas.height) {
+          yourY += yourSpeed;
+        }
         break;
     }
 
-    ctx.fillStyle = "blue";
-    rect(youX, youY, 10, 10);
+    // ctx.fillStyle = "blue";
+    // rect(yourX, yourY, yourW, yourH);
+    avatar(yourX, yourY, yourW, keyCode);
 
     ctx.fillStyle = "red";
     ctx.font = "20px Silkscreen";
-    ctx.fillText("x: " + youX + " y: " + youY ,10,50);
+    ctx.fillText("x: " + yourX + " y: " + yourY ,10,50);
 
   });
 
