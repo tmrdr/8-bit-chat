@@ -9,6 +9,15 @@ angular.module('ChatApp',['ui.router'])
     url: '/',
     component: 'homeComp'
   })
+  .state('login', {
+    url: '/login',
+    component: 'loginComp'
+  })
+  .state('signup', {
+    url: '/signup',
+    component: 'signupComp'
+  })
+
 
 
   // // Removes # symbol for our routes
