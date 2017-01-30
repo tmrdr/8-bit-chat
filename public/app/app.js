@@ -17,6 +17,10 @@ angular.module('ChatApp',['ui.router'])
     url: '/signup',
     component: 'signupComp'
   })
+  .state('profile', {
+    url: '/profile',
+    component: 'profileComp'
+  })
 
 
 
