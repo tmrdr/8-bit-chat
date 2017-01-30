@@ -93,7 +93,7 @@ $(document).ready(function() {
     ctx.fillStyle = "red";
     ctx.font = "20px Silkscreen";
     ctx.fillText("x: " + yourX + " y: " + yourY ,10,50);
-    wrapText("lol hi guys", yourX+yourW, yourY, 50, 15);
+    wrapText("hi lol what stuff waffle pumpkin", yourX+yourW, yourY, 200, 15);
 
   });
 
