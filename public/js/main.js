@@ -1,7 +1,12 @@
-
 $(document).ready(function() {
   console.log("JS online");
   var ctx = $('#canvas')[0].getContext("2d");
+
+  var people = [];
+
+  socket.on('chat message', function(msg){
+    people.push(msg);
+  });
 
   var yourX = 0;
   var yourY = 0;
@@ -33,7 +38,9 @@ $(document).ready(function() {
     } else if (keyCode === 39) {
       rect(x+(w/4), y+(w/2), w/4, w/4);
       rect(x+3*(w/4), y+(w/2), w/4, w/4);
-    }
+    } else if (keyCode === 40) {
+      rect(x, y+(w/2), w/4, w/4);
+      rect(x+3*(w/4), y+(w/2), w/4, w/4);
 
   }
 
@@ -90,6 +97,11 @@ $(document).ready(function() {
 
     // ctx.fillStyle = "blue";
     // rect(yourX, yourY, yourW, yourH);
+    people.forEach(function(person) {
+      avatar(Math.floor(Math.random()*800), Math.floor(Math.random()*300), yourW, keyCode);
+      wrapText(person, Math.floor(Math.random()*800)+yourW, Math.floor(Math.random()*300), 200, 15);
+    })
+
     avatar(yourX, yourY, yourW, keyCode);
 
     ctx.fillStyle = "red";
