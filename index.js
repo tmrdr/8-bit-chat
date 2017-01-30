@@ -21,7 +21,7 @@ app.get('/*', function(req, res){
 
 //socket
 io.on('connection', function(socket){
-  console.log(socket.id);
+  // console.log(socket.id);
   console.log('a user connected');
 
   socket.on('newPlayer', function(newPlayerData) {
@@ -30,7 +30,7 @@ io.on('connection', function(socket){
       id: newPlayerData.id,
       x: newPlayerData.x,
       y: newPlayerData.y,
-      message: newPlayerData.message
+      msg: newPlayerData.msg
     });
   });
 
@@ -38,8 +38,15 @@ io.on('connection', function(socket){
     socket.broadcast.emit('movement', playerData);
   });
 
-  socket.on('chat message', function(msg){
-    io.emit('chat message', msg);
+  // socket.on('chat msg', function(msg){
+  //   io.emit('chat msg', msg);
+  // });
+
+  socket.on('chat message', function(playerData){
+    io.emit('chat message', {
+      id: playerData.id,
+      msg: playerData.msg
+    });
   });
 
   socket.on('disconnect', function(){
