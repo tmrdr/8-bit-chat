@@ -7,7 +7,7 @@ $(document).ready(function() {
   var yourY = 0;
   var yourW = 40;
   var yourH = 120;
-  var yourSpeed = 10;
+  var yourSpeed = 30;
 
   function rect(x, y, w, h) {
     ctx.beginPath();
