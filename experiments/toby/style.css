@@ -9,3 +9,12 @@ h1 {
   font-family: Silkscreen;
   color: red;
 }
+
+#canvas {
+border: 1px solid black;
+}
+
+.container {
+  text-align: center;
+  margin: 0 auto;
+}

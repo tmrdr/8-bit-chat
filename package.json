@@ -17,7 +17,24 @@
   },
   "homepage": "https://github.com/tmrdr/8-bit-chat#readme",
   "dependencies": {
+    "bcrypt": "^1.0.2",
+    "body-parser": "^1.16.0",
+    "cheerio": "^0.22.0",
+    "connect-flash": "^0.1.1",
+    "dotenv": "^4.0.0",
+    "ejs": "^2.5.5",
     "express": "^4.14.1",
+    "express-ejs-layouts": "^2.2.0",
+    "express-session": "^1.15.0",
+    "morgan": "^1.7.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "path": "^0.12.7",
+    "pg": "^6.1.2",
+    "pg-hstore": "^2.3.2",
+    "request": "^2.79.0",
+    "sequelize": "^3.30.0",
+    "sequelize-cli": "^2.5.1",
     "socket.io": "^1.7.2"
   }
 }
