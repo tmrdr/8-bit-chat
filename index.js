@@ -24,6 +24,15 @@ io.on('connection', function(socket){
   console.log(socket.id);
   console.log('a user connected');
 
+  socket.on('newPlayer', function(newPlayerData) {
+    console.log(newPlayerData);
+    socket.broadcast.emit('newPlayer', {
+      id: newPlayerData.id,
+      x: newPlayerData.x,
+      y: newPlayerData.y
+    });
+  });
+
   socket.on('chat message', function(msg){
     io.emit('chat message', msg);
   });

@@ -1,19 +1,48 @@
 $(document).ready(function() {
   console.log("JS online");
+  /* SOME INITIALIZATION STUFF */
+  // establish canvas
   var ctx = $('#canvas')[0].getContext("2d");
 
-  var people = [];
+  // players[socketID] = { x: __, y: __, name: __, message: __, colors: { hair, skin, top, bottom } }
+  var players = {}; // list of all connected players and relevant data
 
-  socket.on('chat message', function(msg){
-    people.push(msg);
-    console.log(people);
+  var bit = 10; // size of one "pixel"
+  var yourW = bit*4; // avatar width
+  var yourH = yourW*3; // avatar height
+  var yourX = canvas.width/2 - yourW; // spawn point
+  var yourY = canvas.height/2 - yourH; // spawn point
+  var yourGait = bit; // movement increment
+
+  // connect to socket thing
+  socket.on('connect', function() {
+    // emit socket session ID, initial coordinates (spawn point),
+    // and other user data (display name, avatar appearance/colors)
+    socket.emit('newPlayer', {
+      id: socket.id,
+      x: yourX,
+      y: yourY
+    });
   });
 
-  var yourX = 0;
-  var yourY = 0;
-  var yourW = 40;
-  var yourH = 120;
-  var yourSpeed = 80;
+  // take in initial coordinates and other user data
+  socket.on('newPlayer', function(data) {
+    addPlayer(data.id, data.x, data.y);
+  });
+
+  function addPlayer(playerId, x, y) {
+    players[playerId].x = x;
+    players[playerId].y = y;
+  }
+
+  // var people = [];
+  //
+  // socket.on('chat message', function(msg){
+  //   people.push(msg);
+  //   console.log(people);
+  // });
+
+  avatar(yourX, yourY, yourW);
 
   function rect(x, y, w, h) {
     ctx.beginPath();
