@@ -4,11 +4,10 @@ var ejsLayouts = require('express-ejs-layouts');
 var bodyParser = require('body-parser');
 var request = require('request');
 var session = require('express-session');
-var passport = require('./config/ppConfig');
 var flash = require('connect-flash');
-var isLoggedIn = require('./middleware/isLoggedIn');
+// var isLoggedIn = require('./middleware/isLoggedIn');
 var app = express();
-var db = require("./models");
+// var db = require("./models");
 var path = require('path');
 
 app.use(express.static(path.join(__dirname, 'public')));
@@ -31,8 +30,6 @@ app.use(session({
     saveUninitialized: true
 }));
 
-app.use(passport.initialize());
-app.use(passport.session());
 
 // app.use(flash());
 //
@@ -42,7 +39,7 @@ app.use(passport.session());
 //     next();
 // });
 
-});
+// });
 
 //auth here
 
