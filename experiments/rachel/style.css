@@ -3,7 +3,14 @@ canvas {
   font-family: 'Silkscreen', monospace;
 }
 
+#load {
+   font-family: 'Silkscreen'; /* necessary to load font with div */
+   visibility: hidden; /* makes div invisible but the div element forces the text to load before the canvas. */
+   height: 0px;
+}
+
 @font-face {
   font-family: 'Silkscreen';
+  src: url('slkscr.woff') format('woff'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
   src: url('slkscr.ttf') format('truetype'); /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
 }
