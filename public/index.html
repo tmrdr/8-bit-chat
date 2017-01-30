@@ -18,6 +18,31 @@
     <div class="container">
       <h1 class="redtext">main index for 8-bit chat</h1>
       <canvas id="canvas" width="900" height="500"></canvas>
+      <form id="chat-form">
+      <input type="text" name="chat" placeholder="Enter message">
+      <input type="submit" value="send">
+    </form>
+    <div id="messages"></div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io();
+
+      document.getElementById('chat-form').addEventListener('submit', function(event){
+        event.preventDefault();
+
+        var message = event.target.chat.value;
+
+        socket.emit('chat message', message);
+
+        event.target.chat.value = '';
+      });
+
+      socket.on('chat message', function(msg){
+        var p = document.createElement('p');
+        p.innerText = msg;
+        document.getElementById('messages').appendChild(p);
+      });
+    </script>
     </div>
 
 
