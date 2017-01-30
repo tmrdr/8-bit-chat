@@ -21,7 +21,8 @@ $(document).ready(function() {
     socket.emit('newPlayer', {
       id: socket.id,
       x: yourX,
-      y: yourY
+      y: yourY,
+      message: ""
     });
   });
 
@@ -30,9 +31,11 @@ $(document).ready(function() {
     addPlayer(data.id, data.x, data.y);
   });
 
-  function addPlayer(playerId, x, y) {
+  function addPlayer(playerId, x, y, message) {
     players[playerId].x = x;
     players[playerId].y = y;
+    players[playerId].message = message;
+    console.log(players);
   }
 
   // var people = [];
@@ -106,22 +109,22 @@ $(document).ready(function() {
     switch(keyCode) {
       case 37: // left arrow: keyCode 37
         if (yourX > 0) {
-          yourX -= yourSpeed;
+          yourX -= yourGait;
         }
         break;
       case 38: // up arrow: keyCode 38
         if (yourY > 0) {
-          yourY -= yourSpeed;
+          yourY -= yourGait;
         }
         break;
       case 39: // right arrow: keyCode 39
         if (yourX+yourW < canvas.width) {
-          yourX += yourSpeed;
+          yourX += yourGait;
         }
         break;
       case 40: // down arrow: keyCode 40
         if (yourY+yourH < canvas.height) {
-          yourY += yourSpeed;
+          yourY += yourGait;
         }
         break;
     }
@@ -136,10 +139,10 @@ $(document).ready(function() {
     wrapText("hello!", yourX+yourW, yourY, 200, 15);
 
 
-    people.forEach(function(person) {
-      avatar(Math.floor(Math.random()*800), Math.floor(Math.random()*300), yourW, keyCode);
-      wrapText(person, Math.floor(Math.random()*800)+yourW, Math.floor(Math.random()*300), 200, 15);
-    })
+    // people.forEach(function(person) {
+    //   avatar(Math.floor(Math.random()*800), Math.floor(Math.random()*300), yourW, keyCode);
+    //   wrapText(person, Math.floor(Math.random()*800)+yourW, Math.floor(Math.random()*300), 200, 15);
+    // })
 
 
   });

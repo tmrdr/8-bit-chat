@@ -33,6 +33,10 @@ io.on('connection', function(socket){
     });
   });
 
+  socket.on('movement', function(playerData) {
+    socket.broadcast.emit('movement', playerData);
+  });
+
   socket.on('chat message', function(msg){
     io.emit('chat message', msg);
   });
