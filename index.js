@@ -9,12 +9,26 @@ var flash = require('connect-flash');
 var app = express();
 // var db = require("./models");
 var path = require('path');
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/*', function(req, res){
   res.sendFile(path.join(__dirname, 'public/index.html'));
 })
+
+
+//socket
+io.on('connection', function(socket){
+  console.log('a user connected');
+
+  socket.on('disconnect', function(){
+    console.log('disconnected user');
+  });
+});
+
+
 
 app.set('view engine', 'ejs');
 
@@ -43,7 +57,8 @@ app.use(session({
 
 //auth here
 
+http.listen(3000);
 
-var server = app.listen(process.env.PORT || 3000);
-
-module.exports = server;
+// var server = app.listen(process.env.PORT || 3000);
+//
+// module.exports = server;
