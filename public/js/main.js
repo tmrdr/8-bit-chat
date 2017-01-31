@@ -21,7 +21,7 @@ $(document).ready(function() {
     // emit socket session ID, initial coordinates (spawn point),
     // and other user data (display name, avatar appearance/colors)
     socket.emit('newPlayer', {
-      id: socket.id,
+      id: socket.id.substring(2, socket.id.length),
       x: spawnX,
       y: spawnY,
       msg: ""
@@ -43,10 +43,11 @@ $(document).ready(function() {
       }
     }
     console.log("givePlayersList:", players);
+    redrawCanvas();
   });
 
   socket.on('newPlayer', function(newPlayer) {
-    console.log(newPlayer);
+    addPlayer(newPlayer.id, newPlayer.x, newPlayer.y, 40)
   });
 
   socket.on('movement', function(data) {
@@ -59,16 +60,32 @@ $(document).ready(function() {
     console.log('chat message:', players[data.id].msg)
   });
 
-  avatar(spawnX, spawnY, yourW);
+  avatar(spawnX, spawnY, yourW, 40);
 
   $(document).keydown(function(event) {
-    // console.log( ".keydown() code:", event.keyCode );
+    arrowKeyDown(event);
+    socket.emit('movement', {
+      id: yourId,
+      x: players[yourId].x,
+      y: players[yourId].y,
+    });
+    redrawCanvas();
+  });
+
+/* ---------------------------------------------- DATA MANIPULATION FUNCTIONS */
+
+  function addPlayer(playerId, x, y, msg) {
+    players[playerId] = {
+      x: x,
+      y: y,
+      msg: msg
+    }
+  }
+
+  function arrowKeyDown(event) {
+    console.log("key pressed:", event.keyCode);
     var keyCode = event.keyCode;
-
-    if (keyCode >= 37 && keyCode <= 40) { // ARROW KEYS ONLY
-      // ctx.clearRect(yourX, yourY, 10, 10); // clears just the rectangle but not the text
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
-
+    if (keyCode >= 37 && keyCode <= 40) { // ONLY ARROW KEYS MODIFY YOUR COORDINATES
       switch(keyCode) {
         case 37: // left arrow: keyCode 37
           if (players[yourId].x > 0) {
@@ -91,39 +108,26 @@ $(document).ready(function() {
           }
           break;
       }
-
-      avatar(players[yourId].x, players[yourId].y, yourW, keyCode);
-
-      ctx.fillStyle = "red";
-      ctx.font = "20px Silkscreen";
-      ctx.fillText("x: " + players[yourId].x + " y: " + players[yourId].y ,10,50);
-      if (players[yourId].msg !== "") {
-        wrapText(players[yourId].msg, players[yourId].x+yourW, players[yourId].y, 200, 15);
-      }
-
-      socket.emit('movement', {
-        id: yourId,
-        x: players[yourId].x,
-        y: players[yourId].y,
-      });
-
-      console.log(players);
-
-    }
-
-  });
-
-
-/* ------------------------------------------------------ NON-STATE FUNCTIONS */
-
-  function addPlayer(playerId, x, y, msg) {
-    players[playerId] = {
-      x: x,
-      y: y,
-      msg: msg
     }
   }
 
+/* -------------------------------------------- CANVAS MANIPULATION FUNCTIONS */
+// RENDER EVERY PLAYER'S AVATAR
+  function redrawCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
+    for (var id in players) {
+      avatar(players[id].x, players[id].y, yourW, 40, players[id].msg);
+      console.log(players[id].msg)
+    }
+
+    console.log(players);
+
+    ctx.fillStyle = "red";
+    ctx.font = "20px Silkscreen";
+    ctx.fillText("x: " + players[yourId].x + " y: " + players[yourId].y ,10,50);
+  }
+
+// DRAW BASIC RECTANGLES
   function rect(x, y, w, h) {
     ctx.beginPath();
     ctx.rect(x,y,w,h);
@@ -131,30 +135,38 @@ $(document).ready(function() {
     ctx.fill();
   }
 
-  function avatar(x, y, w, keyCode) {
-    ctx.fillStyle = 'chocolate';
+// DRAW FULL AVATARS
+  function avatar(x, y, w, keyCode, msg) {
+    ctx.fillStyle = 'chocolate'; // skin
     rect(x, y, w, w);
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = 'red'; // top
     rect(x, y+w, w, w);
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = 'blue'; // bottom
     rect(x, y+(w*2), w, w);
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = 'black'; // hair
     rect(x, y, w, w/4);
 
-    ctx.fillStyle = 'black';
-    if (keyCode === 37) {
-      rect(x, y+(w/2), w/4, w/4);
-      rect(x+(w/2), y+(w/2), w/4, w/4);
-    } else if (keyCode === 39) {
-      rect(x+(w/4), y+(w/2), w/4, w/4);
-      rect(x+3*(w/4), y+(w/2), w/4, w/4);
-    } else if (keyCode === 40) {
-      rect(x, y+(w/2), w/4, w/4);
-      rect(x+3*(w/4), y+(w/2), w/4, w/4);
+    if (keyCode) {
+      ctx.fillStyle = 'black'; // eyes
+      if (keyCode === 37) { // facing left
+        rect(x, y+(w/2), w/4, w/4);
+        rect(x+(w/2), y+(w/2), w/4, w/4);
+      } else if (keyCode === 39) { // facing right
+        rect(x+(w/4), y+(w/2), w/4, w/4);
+        rect(x+3*(w/4), y+(w/2), w/4, w/4);
+      } else if (keyCode === 40) { // facing down/forward
+        rect(x, y+(w/2), w/4, w/4);
+        rect(x+3*(w/4), y+(w/2), w/4, w/4);
+      }
+    }
+
+    if (msg !== "" && msg !== undefined) { // if message is not empty
+      wrapText(msg, x+w, y, 200, 15); // also render message
     }
 
   }
 
+// DRAW TEXT
   function wrapText(text, x, y, maxWidth, lineHeight) {
     var words = text.split(' ');
     var line = '';

@@ -23,7 +23,7 @@ app.get('/*', function(req, res){
 io.on('connection', function(socket){
   // console.log(socket.id);
   console.log('user connected:', socket.client.id);
-  console.log("connected sockets:", Object.keys(io.sockets.sockets));
+  // console.log("connected sockets:", Object.keys(io.sockets.sockets));
 
   socket.on('newPlayer', function(newPlayerData) {
     console.log("new player:", newPlayerData);
@@ -57,7 +57,7 @@ io.on('connection', function(socket){
     });
   });
 
-  socket.on('disconnect', function(){
+  socket.on('disconnect', function(){ // LATER SET THIS UP TO REMOVE OBJECT FROM PLAYER LIST BY KEY (PLAYER ID)
     console.log('disconnected user:', socket.client.id);
   });
 });
