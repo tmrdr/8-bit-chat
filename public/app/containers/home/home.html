@@ -2,9 +2,9 @@
   <h1 class="redtext">8-bit chat</h1>
   <canvas id="canvas" width="900" height="500" ></canvas>
   <form id="chat-form">
-  <input type="text" name="chat" value="" placeholder="Enter message">
-  <input type="submit" value="send">
-</form>
+    <input type="text" name="chat" value="" placeholder="Enter message">
+    <input type="submit" value="send">
+  </form>
 <div id="messages"></div>
 
 <script src="/socket.io/socket.io.js"></script>
@@ -27,7 +27,9 @@
     console.log("chat data:", data);
     var p = document.createElement('p');
     p.innerText = data.msg;
-    document.getElementById('messages').appendChild(p);
+    document.getElementById('messages')
+    // .appendChild(p)
+    ;
   });
 
 </script>

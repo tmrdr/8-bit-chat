@@ -6,7 +6,12 @@ angular.module('ChatApp')
 });
 
 function ProfileCompCtrl() {
-
+  var profileComp = this;
+  profileComp.customSettings = {
+    control: 'brightness',
+    theme: 'bootstrap',
+    position: 'top left'
+  };
 }
 
 ProfileCompCtrl.$inject = [];

@@ -15,13 +15,15 @@
     <div class="container">
       <h1 class="redtext">your profile</h1>
       <h2 class="redtext">Username</h2>
-      <!-- <canvas id="char" width="400" height="400" ></canvas> -->
       <div class="hair"></div>
-      <div class="top">
-        <div class="eye1"></div>
-      </div>
-      <div class="torso red"></div>
+      <div class="top"></div>
+      <div class="torso"></div>
       <div class="legs"></div>
+      <div>
+        <form>
+          <input minicolors ng-model="homeComp.customSettings"/>
+        </form>
+      </div>
     </div>
 
 
@@ -29,6 +31,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="profile.js"></script>
+    <script type="text/javascript" src="app/containers/profile/profile.js"></script>
   </body>
 </html>
