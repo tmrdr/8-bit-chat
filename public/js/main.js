@@ -72,6 +72,8 @@ $(document).ready(function() {
       id: yourId,
       x: players[yourId].x,
       y: players[yourId].y,
+      facing: players[yourId].facing,
+      msg: ""
     });
     redrawCanvas();
   });
@@ -91,6 +93,7 @@ $(document).ready(function() {
     console.log("key pressed:", event.keyCode);
     var keyCode = event.keyCode;
     if (keyCode >= 37 && keyCode <= 40) { // ONLY ARROW KEYS MODIFY YOUR COORDINATES
+      players[yourId].facing = keyCode;
       switch(keyCode) {
         case 37: // left arrow: keyCode 37
           if (players[yourId].x > 0) {
@@ -121,7 +124,7 @@ $(document).ready(function() {
   function redrawCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
     for (var id in players) {
-      avatar(players[id].x, players[id].y, yourW, 40, players[id].msg);
+      avatar(players[id].x, players[id].y, yourW, players[id].facing, players[id].msg);
     }
 
     ctx.fillStyle = "red";
