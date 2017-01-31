@@ -72,6 +72,9 @@ io.on('connection', function(socket){
 
   socket.on('disconnect', function(){ // LATER SET THIS UP TO REMOVE OBJECT FROM PLAYER LIST BY KEY (PLAYER ID)
     console.log('disconnected user:', socket.client.id);
+    io.emit('disconnect', {
+      id: socket.client.id.substring(2, socket.id.length)
+    })
   });
 });
 

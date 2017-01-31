@@ -61,10 +61,17 @@ $(document).ready(function() {
     redrawCanvas();
   });
 
-  socket.on('chat message', function(data){
+  socket.on('chat message', function(data) {
     players[data.id].msg = data.msg;
     redrawCanvas();
   });
+
+  socket.on('disconnect', function(player) {
+    console.log(player.id, 'disconnected');
+    delete players[player.id];
+    console.log(players)
+    redrawCanvas();
+  })
 
   $(document).keydown(function(event) {
     if (event.keyCode >= 37 && event.keyCode <= 40){
