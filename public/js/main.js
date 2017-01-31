@@ -73,7 +73,7 @@ $(document).ready(function() {
       x: players[yourId].x,
       y: players[yourId].y,
       facing: players[yourId].facing,
-      msg: ""
+      msg: players[yourId].msg
     });
     redrawCanvas();
   });
