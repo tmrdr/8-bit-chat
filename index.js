@@ -22,9 +22,8 @@ app.get('/*', function(req, res){
 //socket
 io.on('connection', function(socket){
   // console.log(socket.id);
-  console.log('user connected:', socket.client);
+  console.log('user connected:', socket.client.id);
   console.log("connected sockets:", Object.keys(io.sockets.sockets));
-  socket.broadcast.emit('lol hi there');
 
   socket.on('newPlayer', function(newPlayerData) {
     console.log("new player:", newPlayerData);
@@ -43,7 +42,12 @@ io.on('connection', function(socket){
   });
 
   socket.on('movement', function(playerData) {
-    socket.broadcast.emit('movement', playerData);
+    console.log("player movement:", playerData);
+    socket.broadcast.emit('movement', {
+      id: playerData.id,
+      x: playerData.x,
+      y: playerData.y,
+    });
   });
 
   socket.on('chat message', function(playerData){
