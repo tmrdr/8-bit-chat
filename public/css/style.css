@@ -14,7 +14,50 @@
 border: 1px solid black;
 }
 
+#char {
+border: 1px solid black;
+}
+
 .container {
   text-align: center;
   margin: 0 auto;
+}
+.hair{
+  height:20px;
+  width: 100px;
+  background-color: black;
+  text-align: center;
+  margin: 0 auto;
+  margin-top: 50px;
+}
+
+.top {
+  height: 80px;
+  width: 100px;
+  background-color: chocolate;
+  text-align: center;
+  margin: 0 auto;
+  margin-top:0px;
+}
+.torso {
+  height: 120px;
+  width: 100px;
+  background-color: red;
+  text-align: center;
+  margin: 0 auto;
+  margin-top:0px;
+}
+.legs {
+  height: 120px;
+  width: 100px;
+  background-color: blue;
+  text-align: center;
+  margin: 0 auto;
+  margin-top:0px;
+}
+.red {
+  background-color: red;
+}
+.purple{
+  background-color: purple;
 }
