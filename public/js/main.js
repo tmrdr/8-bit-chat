@@ -19,20 +19,23 @@ $(document).ready(function() {
 
   // connect to socket thing
   socket.on('connect', function() {
-    yourId = socket.id;
     // emit socket session ID, initial coordinates (spawn point),
     // and other user data (display name, avatar appearance/colors)
     socket.emit('newPlayer', {
-      id: yourId,
+      id: socket.id,
       x: yourX,
       y: yourY,
       msg: yourMsg
     }); // make sure emit parameters corresponds with back-end socket stuff
 
+    // in the client list, the first two characters of socket IDs are cut off
+    yourId = socket.id.substring(2, socket.id.length);
     console.log(yourId, yourX, yourY, yourMsg);
 
-    // addPlayer(socket.id, yourX, yourY, "");
+    socket.emit('readyForPlayers');
   });
+
+
 
   socket.on('givePlayersList', function(playerList) {
     for (var i=0; i<playerList.length; i++) {
@@ -41,21 +44,9 @@ $(document).ready(function() {
         addPlayer(id, yourX, yourY); // CHANGE X AND Y TO 'CURRENT' COORDINATES OF EACH PLAYER
       }
     }
+    console.log(players);
   });
 
-  // take in that moment's list of players' coordinates and other data
-  // socket.on('newPlayer', function(data) {
-  //   addPlayer(data.id, data.x, data.y);
-  // });
-
-  function addPlayer(playerId, x, y, msg) {
-    players[playerId] = {
-      x: x,
-      y: y,
-      msg: msg
-    }
-    console.log(players);
-  }
 
   socket.on('movement', function(peerData) {
     var peer = players[peerData.id];
@@ -64,15 +55,8 @@ $(document).ready(function() {
     console.log(players);
   });
 
-  var people = [];
-  //
   socket.on('chat message', function(data){
-    var peer = players[data.id]; // does not work for you unless you are added to players list object
-    console.log(peer)
-    peer.msg = data.msg;
-    // people.push({msg});
-    // console.log(people);
-    console.log(players)
+    players[data.id].msg = data.msg;
   });
 
   avatar(yourX, yourY, yourW);
@@ -112,14 +96,19 @@ $(document).ready(function() {
     ctx.fillStyle = "red";
     ctx.font = "20px Silkscreen";
     ctx.fillText("x: " + yourX + " y: " + yourY ,10,50);
-    wrapText(yourMsg, yourX+yourW, yourY, 200, 15);
-
-    // people.forEach(function(person) {
-    //   avatar(Math.floor(Math.random()*800), Math.floor(Math.random()*300), yourW, keyCode);
-    //   wrapText(person, Math.floor(Math.random()*800)+yourW, Math.floor(Math.random()*300), 200, 15);
-    // })
-
+    wrapText(players[yourId].msg, yourX+yourW, yourY, 200, 15);
   });
+
+
+/* NON-STATE FUNCTIONS */
+
+  function addPlayer(playerId, x, y, msg) {
+    players[playerId] = {
+      x: x,
+      y: y,
+      msg: msg
+    }
+  }
 
   function rect(x, y, w, h) {
     ctx.beginPath();

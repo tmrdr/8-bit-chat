@@ -39,7 +39,7 @@
 
         var message = event.target.chat.value;
         socket.emit('chat message', {
-          id: socket.id,
+          id: socket.id.substring(2, socket.id.length), // in the client list, the first two characters of socket IDs are cut off
           msg: message
         });
 

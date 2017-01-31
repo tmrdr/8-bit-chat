@@ -22,7 +22,7 @@ app.get('/*', function(req, res){
 //socket
 io.on('connection', function(socket){
   // console.log(socket.id);
-  console.log('user connected:', socket.client.id);
+  console.log('user connected:', socket.client);
   console.log("connected sockets:", Object.keys(io.sockets.sockets));
   socket.broadcast.emit('lol hi there');
 
@@ -36,7 +36,7 @@ io.on('connection', function(socket){
     });
   });
 
-  socket.on('readyForPLayers', function() {
+  socket.on('readyForPlayers', function() {
     io.of('/').clients(function(error, clients) {
       socket.emit('givePlayersList', clients);
     });
