@@ -5,8 +5,8 @@ angular.module('ChatApp')
   controllerAs: 'ProfileComp'
 });
 
-function ProfileCompCtrl() {
+function ProfileCompCtrl(Auth) {
 
 }
 
-ProfileCompCtrl.$inject = [];
+ProfileCompCtrl.$inject = ['Auth'];

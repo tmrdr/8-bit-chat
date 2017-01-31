@@ -1,20 +1,20 @@
-<head>
+<!-- <head>
     <title>Sign Up</title>
-    <!-- <link rel="stylesheet" type="text/css" href="../css/main.css"> -->
-</head>
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+</head> -->
 
 
-<form action="/auth/signup" method="POST">
+<form ng-submit="userSignup()">
   <h1>Signup</h1>
     <div class="form-group">
-        <label for="authEmail">Username</label>
-        <input id="authEmail" class="form-control" type="text" name="text">
+        <label for="authName">Username</label>
+        <input id="authName" class="form-control" type="text" name="text" ng-model="user.name">
     </div>
 
     <div class="form-group">
         <label for="authPassword">Password</label>
-        <input id="authPassword" class="form-control" type="password" name="password">
+        <input id="authPassword" class="form-control" type="password" name="password" ng-model="user.password">
     </div>
 
-    <input class="btn btn-primary" type="submit">
+    <button class="btn btn-primary" type="submit">Submit</button>
 </form>

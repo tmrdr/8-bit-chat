@@ -1,4 +1,4 @@
-angular.module('ChatApp',['ui.router'])
+angular.module('ChatApp',['ui.router', 'ngResource'])
 .config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
   function($stateProvider, $urlRouterProvider, $locationProvider) {
   $urlRouterProvider.otherwise('/');
