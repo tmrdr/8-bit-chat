@@ -22,10 +22,12 @@ app.get('/*', function(req, res){
 //socket
 io.on('connection', function(socket){
   // console.log(socket.id);
-  console.log('a user connected');
+  console.log('user connected:', socket.client.id);
+  console.log("connected sockets:", Object.keys(io.sockets.sockets));
+  socket.broadcast.emit('lol hi there');
 
   socket.on('newPlayer', function(newPlayerData) {
-    console.log(newPlayerData);
+    console.log("new player:", newPlayerData);
     socket.broadcast.emit('newPlayer', {
       id: newPlayerData.id,
       x: newPlayerData.x,

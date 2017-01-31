@@ -1,7 +1,7 @@
 $(document).ready(function() {
   console.log("JS online");
   /* SOME INITIALIZATION STUFF */
-  var socket = io();
+  // var socket = io();
   var ctx = $('#canvas')[0].getContext("2d");
 
   // players[socketID] = { x: __, y: __, name: __, msg: __, colors: { hair, skin, top, bottom } }
@@ -18,7 +18,7 @@ $(document).ready(function() {
   var yourGait = bit; // movement increment
 
   // connect to socket thing
-  socket.on('connect', function() {
+  socket.on('connect', function(data) {
     yourId = socket.id;
     // emit socket session ID, initial coordinates (spawn point),
     // and other user data (display name, avatar appearance/colors)
@@ -30,8 +30,8 @@ $(document).ready(function() {
     }); // make sure emit parameters corresponds with back-end socket stuff
 
     console.log(yourId, yourX, yourY, yourMsg);
-    // addPlayer(socket.id, yourX, yourY, "");
 
+    // addPlayer(socket.id, yourX, yourY, "");
   });
 
   // take in that moment's list of players' coordinates and other data

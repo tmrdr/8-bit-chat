@@ -33,27 +33,26 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
       var socket = io();
-      socket.on('connect', function() {
-        document.getElementById('chat-form').addEventListener('submit', function(event){
-          event.preventDefault();
 
-          var message = event.target.chat.value;
+      document.getElementById('chat-form').addEventListener('submit', function(event){
+        event.preventDefault();
 
-          socket.emit('chat message', {
-            id: socket.id,
-            msg: message
-          });
-
-          event.target.chat.value = '';
+        var message = event.target.chat.value;
+        socket.emit('chat message', {
+          id: socket.id,
+          msg: message
         });
 
-        socket.on('chat message', function(data){
-          console.log(data);
-          var p = document.createElement('p');
-          p.innerText = data.msg;
-          document.getElementById('messages').appendChild(p);
-        });
+        event.target.chat.value = '';
       });
+
+      socket.on('chat message', function(data){
+        console.log("chat data:", data);
+        var p = document.createElement('p');
+        p.innerText = data.msg;
+        document.getElementById('messages').appendChild(p);
+      });
+
     </script>
     </div>
     <div ui-view></div>
