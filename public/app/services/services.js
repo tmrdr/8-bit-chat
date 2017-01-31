@@ -9,6 +9,7 @@ angular.module('ChatApp')
         method: 'POST',
         data: params
       }
+      
       return $http(req).then(function success(res) {
         if(res.status !== 200) {
           console.log('couldnot create user', res.data.message);

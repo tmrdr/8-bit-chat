@@ -12,19 +12,20 @@ function SignupCompCtrl($scope, $state, UserService) {
     password: ''
   };
   console.log('signup.js here');
-  console.log('signupComp.user', signupComp.user);
   signupComp.userSignup = function() {
-    console.log('click');
     var params = {
       name: signupComp.user.name,
       password: signupComp.user.password
     }
-    console.log('name,password:', signupComp.user.name, signupComp.user.password)
+
+    console.log('params', params);
+
     UserService.createAccount(params).then(function(user) {
+      console.log('user service here');
       if (user === false) {
         console.log('user create error');
       } else {
-        console.log('got user:', user);
+        console.log('got user:', signupComp.user);
         $state.go('home');
       };
     });

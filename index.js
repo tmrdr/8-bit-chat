@@ -14,6 +14,7 @@ var secret = process.env.JWT_SECRET;
 // mongoose models and connection
 var mongoose = require('mongoose');
 var User = require('./models/user');
+mongoose.connect('mongodb://localhost/chat');
 
 // var isLoggedIn = require('./middleware/isLoggedIn');
 var app = express();
@@ -25,9 +26,12 @@ var io = require('socket.io')(http);
 app.use(express.static(path.join(__dirname, 'public')));
 
 // AUTH HERE
+// app.use('/api/recipes', expressJWT({secret: secret}), require('./controllers/recipes'));
+
 app.use('/api/users', expressJWT({secret: secret}).unless({
   path: [{ url: '/api/users', methods: ['POST'] }]
 }), require('./controllers/users'));
+
 
 // this middleware will check if expressJWT did not authorize the user, and return a message
 app.use(function (err, req, res, next) {
@@ -106,6 +110,7 @@ io.on('connection', function(socket){
 // app.set('view engine', 'ejs');
 
 app.use(require('morgan')('dev'));
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
     extended: false
 }));
