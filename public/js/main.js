@@ -57,7 +57,7 @@ $(document).ready(function() {
   var people = [];
   //
   socket.on('chat message', function(data){
-    var peer = players[data.id];
+    var peer = players[data.id]; // does not work for you unless you are added to players list object
     console.log(peer)
     peer.msg = data.msg;
     // people.push({msg});
