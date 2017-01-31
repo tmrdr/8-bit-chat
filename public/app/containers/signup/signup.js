@@ -5,18 +5,21 @@ angular.module('ChatApp')
   controllerAs: 'signupComp'
 });
 
-function SignupCompCtrl($scope, UserService) {
-  // signupComp = this;
-  $scope.user = {
-    email: '',
+function SignupCompCtrl($scope, $state, UserService) {
+  signupComp = this;
+  signupComp.user = {
+    name: '',
     password: ''
   };
-  $scope.userSignup = function() {
+  console.log('signup.js here');
+  console.log('signupComp.user', signupComp.user);
+  signupComp.userSignup = function() {
     console.log('click');
     var params = {
-      name: $scope.user.name,
-      password: $scope.user.password
+      name: signupComp.user.name,
+      password: signupComp.user.password
     }
+    console.log('name,password:', signupComp.user.name, signupComp.user.password)
     UserService.createAccount(params).then(function(user) {
       if (user === false) {
         console.log('user create error');
@@ -28,4 +31,4 @@ function SignupCompCtrl($scope, UserService) {
   };
 }
 
-SignupCompCtrl.$inject = ['$scope', 'UserService'];
+SignupCompCtrl.$inject = ['$scope', '$state', 'UserService'];
