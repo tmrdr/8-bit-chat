@@ -22,7 +22,7 @@ app.get('/*', function(req, res){
 //socket
 io.on('connection', function(socket){
   // console.log(socket.id);
-  console.log('user connected:', socket.client.id);
+  // console.log('user connected:', socket.client.id);
   // console.log("connected sockets:", Object.keys(io.sockets.sockets));
 
   socket.on('newPlayer', function(newPlayerData) {
@@ -31,6 +31,7 @@ io.on('connection', function(socket){
       id: newPlayerData.id,
       x: newPlayerData.x,
       y: newPlayerData.y,
+      facing: newPlayerData.facing,
       msg: newPlayerData.msg
     });
   });
@@ -41,12 +42,24 @@ io.on('connection', function(socket){
     });
   });
 
+  socket.on('player state', function(playerData) {
+    socket.broadcast.emit('player state', {
+      id: playerData.id,
+      x: playerData.x,
+      y: playerData.y,
+      facing: playerData.facing,
+      msg: playerData.msg
+    });
+  })
+
   socket.on('movement', function(playerData) {
-    console.log("player movement:", playerData);
+    // console.log("player movement:", playerData);
     socket.broadcast.emit('movement', {
       id: playerData.id,
       x: playerData.x,
       y: playerData.y,
+      facing: playerData.facing,
+      msg: playerData.msg
     });
   });
 

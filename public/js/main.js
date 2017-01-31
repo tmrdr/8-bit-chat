@@ -5,7 +5,7 @@ $(document).ready(function() {
   console.log("canvas:", $('#canvas')[0])
   var ctx = $('#canvas')[0].getContext("2d");
 
-  // players[socketID] = { x: __, y: __, name: __, msg: __, colors: { hair, skin, top, bottom } }
+  // players[socketID] = { x: __, y: __, facing: __, msg: __, colors: { hair, skin, top, bottom } }
   var players = {}; // list of all connected players and relevant data
   var yourId;
 
@@ -14,6 +14,7 @@ $(document).ready(function() {
   var yourH = yourW*3; // avatar height
   var spawnX = canvas.width/2 - yourW/2; // spawn point
   var spawnY = canvas.height/2 - yourH/2; // spawn point
+  var spawnFacing = 40;
   var yourGait = bit; // movement increment
 
 /* ------------------------------------------------ SOCKET.IO EVENT LISTENERS */
@@ -24,6 +25,7 @@ $(document).ready(function() {
       id: socket.id.substring(2, socket.id.length),
       x: spawnX,
       y: spawnY,
+      facing: spawnFacing,
       msg: ""
     });
     // make sure emit parameters corresponds with the way back-end socket.io sets it up
@@ -32,35 +34,37 @@ $(document).ready(function() {
     yourId = socket.id.substring(2, socket.id.length);
 
     socket.emit('readyForPlayers');
-    console.log(yourId, spawnX, spawnY, "");
-  });
+    console.log('player ready:', yourId, spawnX, spawnY, spawnFacing, "");
 
-  socket.on('givePlayersList', function(playerList) {
-    for (var i=0; i<playerList.length; i++) {
-      var id = playerList[i].substring(2, playerList[i].length);
-      if (id !== socket.id) {
-        addPlayer(id, spawnX, spawnY, ""); // CHANGE X AND Y TO 'CURRENT' COORDINATES OF EACH PLAYER
+    socket.on('givePlayersList', function(playerList) {
+      for (var i=0; i<playerList.length; i++) {
+        var id = playerList[i].substring(2, playerList[i].length);
+        if (id !== socket.id) {
+          addPlayer(id, spawnX, spawnY, spawnFacing, ""); // CHANGE X AND Y TO 'CURRENT' COORDINATES OF EACH PLAYER
+        }
       }
-    }
-    console.log("givePlayersList:", players);
-    redrawCanvas();
+      console.log("givePlayersList:", players);
+      redrawCanvas();
+    });
   });
 
   socket.on('newPlayer', function(newPlayer) {
-    addPlayer(newPlayer.id, newPlayer.x, newPlayer.y, 40)
+    addPlayer(newPlayer.id, newPlayer.x, newPlayer.y, newPlayer.facing, "");
+    redrawCanvas();
   });
 
   socket.on('movement', function(data) {
     players[data.id].x = data.x;
     players[data.id].y = data.y;
+    players[data.id].facing = data.facing;
+    players[data.id].msg = data.msg;
+    redrawCanvas();
   });
 
   socket.on('chat message', function(data){
     players[data.id].msg = data.msg;
-    console.log('chat message:', players[data.id].msg)
+    redrawCanvas();
   });
-
-  avatar(spawnX, spawnY, yourW, 40);
 
   $(document).keydown(function(event) {
     arrowKeyDown(event);
@@ -74,10 +78,11 @@ $(document).ready(function() {
 
 /* ---------------------------------------------- DATA MANIPULATION FUNCTIONS */
 
-  function addPlayer(playerId, x, y, msg) {
+  function addPlayer(playerId, x, y, keyCode, msg) {
     players[playerId] = {
       x: x,
       y: y,
+      facing: keyCode,
       msg: msg
     }
   }
@@ -117,10 +122,7 @@ $(document).ready(function() {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
     for (var id in players) {
       avatar(players[id].x, players[id].y, yourW, 40, players[id].msg);
-      console.log(players[id].msg)
     }
-
-    console.log(players);
 
     ctx.fillStyle = "red";
     ctx.font = "20px Silkscreen";
