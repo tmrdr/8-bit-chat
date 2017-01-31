@@ -67,15 +67,18 @@ $(document).ready(function() {
   });
 
   $(document).keydown(function(event) {
-    arrowKeyDown(event);
-    socket.emit('movement', {
-      id: yourId,
-      x: players[yourId].x,
-      y: players[yourId].y,
-      facing: players[yourId].facing,
-      msg: players[yourId].msg
-    });
-    redrawCanvas();
+    if (event.keyCode >= 37 && event.keyCode <= 40){
+      event.preventDefault();
+      arrowKeyDown(event.keyCode);
+      socket.emit('movement', {
+        id: yourId,
+        x: players[yourId].x,
+        y: players[yourId].y,
+        facing: players[yourId].facing,
+        msg: players[yourId].msg
+      });
+      redrawCanvas();
+    }
   });
 
 /* ---------------------------------------------- DATA MANIPULATION FUNCTIONS */
@@ -89,9 +92,8 @@ $(document).ready(function() {
     }
   }
 
-  function arrowKeyDown(event) {
-    console.log("key pressed:", event.keyCode);
-    var keyCode = event.keyCode;
+  function arrowKeyDown(keyCode) {
+    console.log("key pressed:", keyCode);
     if (keyCode >= 37 && keyCode <= 40) { // ONLY ARROW KEYS MODIFY YOUR COORDINATES
       players[yourId].facing = keyCode;
       switch(keyCode) {
