@@ -36,13 +36,15 @@ io.on('connection', function(socket){
     });
   });
 
+  socket.on('readyForPLayers', function() {
+    io.of('/').clients(function(error, clients) {
+      socket.emit('givePlayersList', clients);
+    });
+  });
+
   socket.on('movement', function(playerData) {
     socket.broadcast.emit('movement', playerData);
   });
-
-  // socket.on('chat msg', function(msg){
-  //   io.emit('chat msg', msg);
-  // });
 
   socket.on('chat message', function(playerData){
     io.emit('chat message', {
@@ -52,7 +54,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('disconnect', function(){
-    console.log('disconnected user');
+    console.log('disconnected user:', socket.client.id);
   });
 });
 

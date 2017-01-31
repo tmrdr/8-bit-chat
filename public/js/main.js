@@ -8,7 +8,7 @@ $(document).ready(function() {
   var players = {}; // list of all connected players and relevant data
   var yourId;
   var yourMsg = "";
-  console.log(players);
+  console.log('players', players);
 
   var bit = 10; // size of one "pixel"
   var yourW = bit*4; // avatar width
@@ -18,7 +18,7 @@ $(document).ready(function() {
   var yourGait = bit; // movement increment
 
   // connect to socket thing
-  socket.on('connect', function(data) {
+  socket.on('connect', function() {
     yourId = socket.id;
     // emit socket session ID, initial coordinates (spawn point),
     // and other user data (display name, avatar appearance/colors)
@@ -34,10 +34,19 @@ $(document).ready(function() {
     // addPlayer(socket.id, yourX, yourY, "");
   });
 
-  // take in that moment's list of players' coordinates and other data
-  socket.on('newPlayer', function(data) {
-    addPlayer(data.id, data.x, data.y);
+  socket.on('givePlayersList', function(playerList) {
+    for (var i=0; i<playerList.length; i++) {
+      var id = playerList[i].substring(2, playerList[i].length);
+      if (id !== socket.id) {
+        addPlayer(id, yourX, yourY); // CHANGE X AND Y TO 'CURRENT' COORDINATES OF EACH PLAYER
+      }
+    }
   });
+
+  // take in that moment's list of players' coordinates and other data
+  // socket.on('newPlayer', function(data) {
+  //   addPlayer(data.id, data.x, data.y);
+  // });
 
   function addPlayer(playerId, x, y, msg) {
     players[playerId] = {
@@ -52,6 +61,7 @@ $(document).ready(function() {
     var peer = players[peerData.id];
     peer.x = peerData.x;
     peer.y = peerData.y;
+    console.log(players);
   });
 
   var people = [];
@@ -110,8 +120,6 @@ $(document).ready(function() {
     // })
 
   });
-
-  console.log(players);
 
   function rect(x, y, w, h) {
     ctx.beginPath();
