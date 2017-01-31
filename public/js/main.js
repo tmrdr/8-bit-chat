@@ -2,6 +2,7 @@ $(document).ready(function() {
   console.log("JS online");
   /* SOME INITIALIZATION STUFF */
   // var socket = io();
+  console.log("canvas:", $('#canvas')[0])
   var ctx = $('#canvas')[0].getContext("2d");
 
   // players[socketID] = { x: __, y: __, name: __, msg: __, colors: { hair, skin, top, bottom } }

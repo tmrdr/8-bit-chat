@@ -1,1 +1,36 @@
-<!-- <h1>Home.html - Here</h1> -->
+<h1>Home.html - Here</h1>
+<div class="container">
+  <h1 class="redtext">8-bit chat</h1>
+  <canvas id="canvas" width="900" height="500" ></canvas>
+  <form id="chat-form">
+  <input type="text" name="chat" value="" placeholder="Enter message">
+  <input type="submit" value="send">
+</form>
+<div id="messages"></div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  var socket = io();
+  
+  document.getElementById('chat-form').addEventListener('submit', function(event){
+    event.preventDefault();
+
+    var message = event.target.chat.value;
+    socket.emit('chat message', {
+      id: socket.id.substring(2, socket.id.length), // in the client list, the first two characters of socket IDs are cut off
+      msg: message
+    });
+
+    event.target.chat.value = '';
+  });
+
+  socket.on('chat message', function(data){
+    console.log("chat data:", data);
+    var p = document.createElement('p');
+    p.innerText = data.msg;
+    document.getElementById('messages').appendChild(p);
+  });
+
+</script>
+<script type="text/javascript" src="js/main.js"></script>
+</div>
