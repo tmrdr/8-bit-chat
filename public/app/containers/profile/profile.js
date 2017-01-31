@@ -10,7 +10,7 @@ function ProfileCompCtrl() {
   profileComp.customSettings = {
     control: 'brightness',
     theme: 'bootstrap',
-    position: 'top left'
+    position: 'bottom right'
   };
 }
 
