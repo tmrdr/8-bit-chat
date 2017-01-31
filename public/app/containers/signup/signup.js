@@ -21,7 +21,6 @@ function SignupCompCtrl($scope, $state, UserService) {
     console.log('params', params);
 
     UserService.createAccount(params).then(function(user) {
-      console.log('user service here');
       if (user === false) {
         console.log('user create error');
       } else {

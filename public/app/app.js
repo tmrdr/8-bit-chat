@@ -1,10 +1,10 @@
 angular.module('ChatApp',['ui.router', 'ngResource'])
-.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
-  function($stateProvider, $urlRouterProvider, $locationProvider) {
+.config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$httpProvider',
+  function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
   $urlRouterProvider.otherwise('/');
 
   // Between routes to check auth
-  // $httpProvider.interceptors.push('AuthInterceptor');
+  $httpProvider.interceptors.push('AuthInterceptor');
 
   //Setup states (aka routes)
   $stateProvider

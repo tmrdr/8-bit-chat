@@ -11,19 +11,23 @@ var expressJWT = require('express-jwt');
 var jwt = require('jsonwebtoken');
 var secret = process.env.JWT_SECRET;
 
+var app = express();
+
 // mongoose models and connection
 var mongoose = require('mongoose');
 var User = require('./models/user');
 mongoose.connect('mongodb://localhost/chat');
 
-// var isLoggedIn = require('./middleware/isLoggedIn');
-var app = express();
-// var db = require("./models");
 var path = require('path');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
+app.use(require('morgan')('dev'));
 app.use(express.static(path.join(__dirname, 'public')));
+
+// decode POST data in JSON and URL encoded formats
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 
 // AUTH HERE
 // app.use('/api/recipes', expressJWT({secret: secret}), require('./controllers/recipes'));
@@ -105,22 +109,6 @@ io.on('connection', function(socket){
     console.log('disconnected user:', socket.client.id);
   });
 });
-
-
-// app.set('view engine', 'ejs');
-
-app.use(require('morgan')('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({
-    extended: false
-}));
-
-
-// app.use(session({
-//     secret: process.env.SESSION_SECRET || 'supersecretpassword',
-//     resave: false,
-//     saveUninitialized: true
-// }));
 
 
 // app.use(flash());

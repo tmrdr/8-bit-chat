@@ -13,7 +13,7 @@ router.route('/')
   })
   .post(function(req, res) {
     console.log('posting');
-    console.log('body:', req.body);
+    console.log('req.body:', req.body);
     // find the user first in case the email already exists
     User.findOne({ name: req.body.name }, function(err, user) {
       if (user) return res.status(400).send({ message: 'Username already exists' });
