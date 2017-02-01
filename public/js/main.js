@@ -118,7 +118,15 @@ $(document).ready(function() {
       msg: message
     });
 
-      event.target.chat.value = '';
+    event.target.chat.value = '';
+
+    setTimeout(function() {
+      socket.emit('chat message', {
+        id: yourId,
+        msg: ''
+      });
+    }, message.length*1000);
+
   });
 
 /* -------------------------------------- PLAYER STATE MANIPULATION FUNCTIONS */
