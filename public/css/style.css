@@ -55,9 +55,11 @@ border: 1px solid black;
   margin: 0 auto;
   margin-top:0px;
 }
-.red {
-  background-color: red;
+#colors {
+  display: inline-block;
+  margin-top: 25px;
 }
-.purple{
-  background-color: purple;
+.minicolors-swatch{
+  margin-top: -3.8px;
+  margin-left: -40px;
 }
