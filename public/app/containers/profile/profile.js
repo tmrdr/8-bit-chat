@@ -12,6 +12,8 @@ function ProfileCompCtrl() {
     theme: 'bootstrap',
     position: 'bottom right'
   };
+  console.log($("#shirtColor").val())
+
 }
 
 ProfileCompCtrl.$inject = [];
