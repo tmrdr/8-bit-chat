@@ -15,6 +15,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-resource.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/1.0.0-rc.1/angular-ui-router.js"></script>
     <script src="app/app.js"></script>
+    <script src="app/controllers/navbar.js"></script>
     <script src="app/containers/home/home.js"></script>
     <script src="app/containers/login/login.js"></script>
     <script src="app/containers/signup/signup.js"></script>
@@ -28,7 +29,10 @@
 
   </head>
   <body>
-      <div ui-view></div>
+    <div class="container">
+      <div ng-include="'app/containers/navbar/navbar.html'"></div>
+    </div>
+    <div ui-view></div>
   </body>
 
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
