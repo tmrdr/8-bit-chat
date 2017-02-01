@@ -70,9 +70,7 @@ app.get('/*', function(req, res){
 
 // socket
 io.on('connection', function(socket){
-  // console.log(socket.id);
   // console.log('user connected:', socket.client.id);
-
   socket.on('newPlayer', function(newPlayerData) {
     console.log("new player:", newPlayerData);
     socket.broadcast.emit('newPlayer', {
@@ -85,7 +83,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('readyForPlayers', function() {
-    console.log('readyForPlayers fired');
+    // console.log('readyForPlayers fired');
     io.of('/').clients(function(error, clients) {
       console.log("givePlayersList:", clients);
       socket.emit('givePlayersList', clients);
@@ -93,7 +91,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('player state', function(playerData) {
-    console.log('player state:', playerData)
+    // console.log('player state:', playerData)
     socket.broadcast.emit('player state', {
       id: playerData.id,
       x: playerData.x,

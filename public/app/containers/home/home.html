@@ -1,13 +1,16 @@
-<div class="container">
+<div id="chat-container" class="container">
   <h1 class="redtext">8-bit chat</h1>
   <canvas id="canvas" width="900" height="500" ></canvas>
   <form id="chat-form">
     <input type="text" name="chat" value="" placeholder="Enter message">
     <input type="submit" value="send">
   </form>
-<div id="messages"></div>
+  <div id="messages"></div>
 
-<script src="/socket.io/socket.io.js"></script>
-<script type="text/javascript" src="js/main.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+<!-- <script type="text/javascript" src="js/chat.js"></script>
+<script>
+  $(document).ready(function(){ loadChat(); });
+</script> -->
 
 </div>

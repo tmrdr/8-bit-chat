@@ -1,4 +1,4 @@
-$(document).ready(function() {
+function loadChat() {
   var socket = io();
   console.log("JS online");
   /* SOME INITIALIZATION STUFF */
@@ -10,7 +10,7 @@ $(document).ready(function() {
   var players = {}; // list of all connected players and relevant data
   var yourId;
 
-  var bit = 10; // size of one "pixel"
+  var bit = 5; // size of one "pixel"
   var yourW = bit*4; // avatar width
   var yourH = yourW*3; // avatar height
   var spawnX = canvas.width/2 - yourW/2; // spawn point
@@ -99,6 +99,13 @@ $(document).ready(function() {
   }
 
 /* --------------------------------------------- ELEMENT/DOCUMENT EVENT STUFF */
+  window.onbeforeunload = function(e) {
+    socket.disconnect();
+  };
+
+  $(window).on('hashchange', function(e){
+    socket.disconnect();
+  });
 
   $(document).keydown(function(event) {
     if (event.keyCode >= 37 && event.keyCode <= 40){
@@ -260,4 +267,4 @@ $(document).ready(function() {
     ctx.fillText(line, x, y);
   }
 
-});
+}
