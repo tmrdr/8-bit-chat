@@ -5,7 +5,7 @@ $(document).ready(function() {
   console.log("canvas:", $('#canvas')[0])
   var ctx = $('#canvas')[0].getContext("2d");
 
-  // players[socketID] = { x: __, y: __, name: __, msg: __, colors: { hair, skin, top, bottom } }
+  // players[socketID] = { x: __, y: __, facing: __, msg: __, colors: { hair, skin, top, bottom } }
   var players = {}; // list of all connected players and relevant data
   var yourId;
 
@@ -14,6 +14,7 @@ $(document).ready(function() {
   var yourH = yourW*3; // avatar height
   var spawnX = canvas.width/2 - yourW/2; // spawn point
   var spawnY = canvas.height/2 - yourH/2; // spawn point
+  var spawnFacing = 40;
   var yourGait = bit; // movement increment
 
 /* ------------------------------------------------ SOCKET.IO EVENT LISTENERS */
@@ -21,9 +22,10 @@ $(document).ready(function() {
     // emit socket session ID, initial coordinates (spawn point),
     // and other user data (display name, avatar appearance/colors)
     socket.emit('newPlayer', {
-      id: socket.id,
+      id: socket.id.substring(2, socket.id.length),
       x: spawnX,
       y: spawnY,
+      facing: spawnFacing,
       msg: ""
     });
     // make sure emit parameters corresponds with the way back-end socket.io sets it up
@@ -32,43 +34,75 @@ $(document).ready(function() {
     yourId = socket.id.substring(2, socket.id.length);
 
     socket.emit('readyForPlayers');
-    console.log(yourId, spawnX, spawnY, "");
-  });
+    console.log('player ready:', yourId, spawnX, spawnY, spawnFacing, "");
 
-  socket.on('givePlayersList', function(playerList) {
-    for (var i=0; i<playerList.length; i++) {
-      var id = playerList[i].substring(2, playerList[i].length);
-      if (id !== socket.id) {
-        addPlayer(id, spawnX, spawnY, ""); // CHANGE X AND Y TO 'CURRENT' COORDINATES OF EACH PLAYER
+    socket.on('givePlayersList', function(playerList) {
+      for (var i=0; i<playerList.length; i++) {
+        var id = playerList[i].substring(2, playerList[i].length);
+        if (id !== socket.id) {
+          addPlayer(id, spawnX, spawnY, spawnFacing, ""); // CHANGE X AND Y TO 'CURRENT' COORDINATES OF EACH PLAYER
+        }
       }
-    }
-    console.log("givePlayersList:", players);
+      console.log("givePlayersList:", players);
+      redrawCanvas();
+    });
   });
 
   socket.on('newPlayer', function(newPlayer) {
-    console.log(newPlayer);
+    addPlayer(newPlayer.id, newPlayer.x, newPlayer.y, newPlayer.facing, "");
+    redrawCanvas();
   });
 
   socket.on('movement', function(data) {
     players[data.id].x = data.x;
     players[data.id].y = data.y;
-  });
-
-  socket.on('chat message', function(data){
+    players[data.id].facing = data.facing;
     players[data.id].msg = data.msg;
-    console.log('chat message:', players[data.id].msg)
+    redrawCanvas();
   });
 
-  avatar(spawnX, spawnY, yourW);
+  socket.on('chat message', function(data) {
+    players[data.id].msg = data.msg;
+    redrawCanvas();
+  });
+
+  socket.on('disconnect', function(player) {
+    console.log(player.id, 'disconnected');
+    delete players[player.id];
+    console.log(players)
+    redrawCanvas();
+  })
 
   $(document).keydown(function(event) {
-    // console.log( ".keydown() code:", event.keyCode );
-    var keyCode = event.keyCode;
+    if (event.keyCode >= 37 && event.keyCode <= 40){
+      event.preventDefault();
+      arrowKeyDown(event.keyCode);
+      socket.emit('movement', {
+        id: yourId,
+        x: players[yourId].x,
+        y: players[yourId].y,
+        facing: players[yourId].facing,
+        msg: players[yourId].msg
+      });
+      redrawCanvas();
+    }
+  });
 
-    if (keyCode >= 37 && keyCode <= 40) { // ARROW KEYS ONLY
-      // ctx.clearRect(yourX, yourY, 10, 10); // clears just the rectangle but not the text
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
+/* ---------------------------------------------- DATA MANIPULATION FUNCTIONS */
 
+  function addPlayer(playerId, x, y, keyCode, msg) {
+    players[playerId] = {
+      x: x,
+      y: y,
+      facing: keyCode,
+      msg: msg
+    }
+  }
+
+  function arrowKeyDown(keyCode) {
+    console.log("key pressed:", keyCode);
+    if (keyCode >= 37 && keyCode <= 40) { // ONLY ARROW KEYS MODIFY YOUR COORDINATES
+      players[yourId].facing = keyCode;
       switch(keyCode) {
         case 37: // left arrow: keyCode 37
           if (players[yourId].x > 0) {
@@ -91,39 +125,23 @@ $(document).ready(function() {
           }
           break;
       }
-
-      avatar(players[yourId].x, players[yourId].y, yourW, keyCode);
-
-      ctx.fillStyle = "red";
-      ctx.font = "20px Silkscreen";
-      ctx.fillText("x: " + players[yourId].x + " y: " + players[yourId].y ,10,50);
-      if (players[yourId].msg !== "") {
-        wrapText(players[yourId].msg, players[yourId].x+yourW, players[yourId].y, 200, 15);
-      }
-
-      socket.emit('movement', {
-        id: yourId,
-        x: players[yourId].x,
-        y: players[yourId].y,
-      });
-
-      console.log(players);
-
-    }
-
-  });
-
-
-/* ------------------------------------------------------ NON-STATE FUNCTIONS */
-
-  function addPlayer(playerId, x, y, msg) {
-    players[playerId] = {
-      x: x,
-      y: y,
-      msg: msg
     }
   }
 
+/* -------------------------------------------- CANVAS MANIPULATION FUNCTIONS */
+// RENDER EVERY PLAYER'S AVATAR
+  function redrawCanvas() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
+    for (var id in players) {
+      avatar(players[id].x, players[id].y, yourW, players[id].facing, players[id].msg);
+    }
+
+    ctx.fillStyle = "red";
+    ctx.font = "20px Silkscreen";
+    ctx.fillText("x: " + players[yourId].x + " y: " + players[yourId].y ,10,50);
+  }
+
+// DRAW BASIC RECTANGLES
   function rect(x, y, w, h) {
     ctx.beginPath();
     ctx.rect(x,y,w,h);
@@ -131,30 +149,38 @@ $(document).ready(function() {
     ctx.fill();
   }
 
-  function avatar(x, y, w, keyCode) {
-    ctx.fillStyle = 'chocolate';
+// DRAW FULL AVATARS
+  function avatar(x, y, w, keyCode, msg) {
+    ctx.fillStyle = 'chocolate'; // skin
     rect(x, y, w, w);
-    ctx.fillStyle = 'red';
+    ctx.fillStyle = 'red'; // top
     rect(x, y+w, w, w);
-    ctx.fillStyle = 'blue';
+    ctx.fillStyle = 'blue'; // bottom
     rect(x, y+(w*2), w, w);
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = 'black'; // hair
     rect(x, y, w, w/4);
 
-    ctx.fillStyle = 'black';
-    if (keyCode === 37) {
-      rect(x, y+(w/2), w/4, w/4);
-      rect(x+(w/2), y+(w/2), w/4, w/4);
-    } else if (keyCode === 39) {
-      rect(x+(w/4), y+(w/2), w/4, w/4);
-      rect(x+3*(w/4), y+(w/2), w/4, w/4);
-    } else if (keyCode === 40) {
-      rect(x, y+(w/2), w/4, w/4);
-      rect(x+3*(w/4), y+(w/2), w/4, w/4);
+    if (keyCode) {
+      ctx.fillStyle = 'black'; // eyes
+      if (keyCode === 37) { // facing left
+        rect(x, y+(w/2), w/4, w/4);
+        rect(x+(w/2), y+(w/2), w/4, w/4);
+      } else if (keyCode === 39) { // facing right
+        rect(x+(w/4), y+(w/2), w/4, w/4);
+        rect(x+3*(w/4), y+(w/2), w/4, w/4);
+      } else if (keyCode === 40) { // facing down/forward
+        rect(x, y+(w/2), w/4, w/4);
+        rect(x+3*(w/4), y+(w/2), w/4, w/4);
+      }
+    }
+
+    if (msg !== "" && msg !== undefined) { // if message is not empty
+      wrapText(msg, x+w, y, 200, 15); // also render message
     }
 
   }
 
+// DRAW TEXT
   function wrapText(text, x, y, maxWidth, lineHeight) {
     var words = text.split(' ');
     var line = '';

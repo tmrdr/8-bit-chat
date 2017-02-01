@@ -70,8 +70,8 @@ app.get('/*', function(req, res){
 //socket
 io.on('connection', function(socket){
   // console.log(socket.id);
-  console.log('user connected:', socket.client.id);
-  console.log("connected sockets:", Object.keys(io.sockets.sockets));
+  // console.log('user connected:', socket.client.id);
+  // console.log("connected sockets:", Object.keys(io.sockets.sockets));
 
   socket.on('newPlayer', function(newPlayerData) {
     console.log("new player:", newPlayerData);
@@ -79,6 +79,7 @@ io.on('connection', function(socket){
       id: newPlayerData.id,
       x: newPlayerData.x,
       y: newPlayerData.y,
+      facing: newPlayerData.facing,
       msg: newPlayerData.msg
     });
   });
@@ -89,12 +90,24 @@ io.on('connection', function(socket){
     });
   });
 
+  socket.on('player state', function(playerData) {
+    socket.broadcast.emit('player state', {
+      id: playerData.id,
+      x: playerData.x,
+      y: playerData.y,
+      facing: playerData.facing,
+      msg: playerData.msg
+    });
+  })
+
   socket.on('movement', function(playerData) {
-    console.log("player movement:", playerData);
+    // console.log("player movement:", playerData);
     socket.broadcast.emit('movement', {
       id: playerData.id,
       x: playerData.x,
       y: playerData.y,
+      facing: playerData.facing,
+      msg: playerData.msg
     });
   });
 
@@ -105,8 +118,11 @@ io.on('connection', function(socket){
     });
   });
 
-  socket.on('disconnect', function(){
+  socket.on('disconnect', function(){ // LATER SET THIS UP TO REMOVE OBJECT FROM PLAYER LIST BY KEY (PLAYER ID)
     console.log('disconnected user:', socket.client.id);
+    io.emit('disconnect', {
+      id: socket.client.id.substring(2, socket.id.length)
+    })
   });
 });
 

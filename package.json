@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/tmrdr/8-bit-chat#readme",
   "dependencies": {
+    "@claviska/jquery-minicolors": "^2.2.4",
+    "angular-minicolors": "0.0.9",
     "bcrypt": "^1.0.2",
     "body-parser": "^1.16.0",
     "cheerio": "^0.22.0",
