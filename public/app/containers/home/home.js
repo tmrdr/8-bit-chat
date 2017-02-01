@@ -6,11 +6,11 @@ angular.module('ChatApp')
 });
 
 function HomeCompCtrl() {
-
+  var socket = io();
   this.$onInit = function () {
   /* ---------------------------------------------- SOME INITIALIZATION STUFF */
     console.log("home.js online");
-    var socket = io();
+
     var ctx = $('#canvas')[0].getContext("2d");
 
     // players[socketID] = { x: __, y: __, facing: __, msg: __, colors: { hair, skin, top, bottom } }
@@ -276,10 +276,12 @@ function HomeCompCtrl() {
   };
 
   this.$onDestroy = function () {
-    socket.io.disconnect();
+    console.log($("#chat-container")[0]);
     $("#chat-container").empty();
+    socket.disconnect();
     players = null;
     yourId = null;
+    console.log($("#chat-container")[0]);
   };
 
 }
