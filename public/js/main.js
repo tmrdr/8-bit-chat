@@ -6,27 +6,6 @@ $(document).ready(function() {
   console.log("canvas:", $('#canvas')[0])
   var ctx = $('#canvas')[0].getContext("2d");
 
-
-  $('#chat-form').on('submit', function(event){
-    event.preventDefault();
-
-    var message = event.target.chat.value;
-    socket.emit('chat message', {
-      id: socket.id.substring(2, socket.id.length), // in the client list, the first two characters of socket IDs are cut off
-      msg: message
-    });
-
-      event.target.chat.value = '';
-    });
-
-  socket.on('chat message', function(data){
-    console.log("chat data:", data);
-    var p = document.createElement('p');
-    p.innerText = data.msg;
-    document.getElementById('messages').appendChild(p);
-  });
-
-
   // players[socketID] = { x: __, y: __, facing: __, msg: __, colors: { hair, skin, top, bottom } }
   var players = {}; // list of all connected players and relevant data
   var yourId;
@@ -41,11 +20,11 @@ $(document).ready(function() {
 
 /* ------------------------------------------------ SOCKET.IO EVENT LISTENERS */
   socket.on('connect', function() {
+    console.log('connected to socket', socket);
     // in the client list, the first two characters of socket IDs are cut off
     yourId = socket.id.substring(2, socket.id.length);
+    addPlayer(yourId, spawnX, spawnY, spawnFacing, "")
 
-    // emit socket session ID, initial coordinates (spawn point),
-    // and other user data (display name, avatar appearance/colors)
     socket.emit('newPlayer', {
       id: yourId,
       x: spawnX,
@@ -55,8 +34,8 @@ $(document).ready(function() {
     });
     // make sure emit parameters corresponds with the way back-end socket.io sets it up
 
-    socket.emit('readyForPlayers')
-    // console.log('player ready:', yourId, players[yourId]);
+    socket.emit('readyForPlayers');
+    console.log('player ready:', yourId, players[yourId]);
   });
 
   socket.on('givePlayersList', function(playerList) {
@@ -72,34 +51,33 @@ $(document).ready(function() {
   });
 
   socket.on('newPlayer', function(newPlayer) { // did a new player join?
-    console.log('newPlayer event:', newPlayer)
-    socket.emit('player state', { // send them your player state so they can render it
-      id: yourId,
-      x: players[yourId].x,
-      y: players[yourId].y,
-      facing: players[yourId].facing,
-      msg: players[yourId].msg
-    });
-
+    console.log('newPlayer event:', newPlayer);
     addPlayer(newPlayer.id, newPlayer.x, newPlayer.y, newPlayer.facing, "");
+
+    // send them your player state so they can render it
+    emitYourState();
     redrawCanvas();
   });
 
   socket.on('player state', function(data) {
-    console.log('player state event:', data)
+    // console.log('player state event:', data);
     if (!players[data.id]) { // if the player isn't on your player list, add them
       addPlayer(data.id, data.x, data.y, data.facing, data.msg);
     } else { // if they are on your player list, update their state
-      players[data.id].x = data.x;
-      players[data.id].y = data.y;
-      players[data.id].facing = data.facing;
-      players[data.id].msg = data.msg;
+      updatePlayer(data.id, data.x, data.y, data.facing, data.msg);
     }
     redrawCanvas();
   });
 
+
   socket.on('chat message', function(data) {
+    // console.log("chat data:", data);
     players[data.id].msg = data.msg;
+
+    var p = document.createElement('p');
+    p.innerText = data.msg;
+    document.getElementById('messages').appendChild(p);
+
     redrawCanvas();
   });
 
@@ -108,31 +86,61 @@ $(document).ready(function() {
     delete players[player.id];
     console.log(players)
     redrawCanvas();
-  })
+  });
+
+/* ------------------------------------------ STREAMLINED SOCKET.IO FUNCTIONS */
+  function emitYourState() {
+    socket.emit('player state', {
+      id: yourId,
+      x: players[yourId].x,
+      y: players[yourId].y,
+      facing: players[yourId].facing,
+      msg: players[yourId].msg
+    });
+  }
+
+/* --------------------------------------------- ELEMENT/DOCUMENT EVENT STUFF */
 
   $(document).keydown(function(event) {
     if (event.keyCode >= 37 && event.keyCode <= 40){
       event.preventDefault();
       arrowKeyDown(event.keyCode);
-      socket.emit('player state', {
-        id: yourId,
-        x: players[yourId].x,
-        y: players[yourId].y,
-        facing: players[yourId].facing,
-        msg: players[yourId].msg
-      });
+      emitYourState();
       redrawCanvas();
     }
   });
 
+  $('#chat-form').on('submit', function(event){
+    event.preventDefault();
+
+    var message = event.target.chat.value;
+    socket.emit('chat message', {
+      id: yourId, // in the client list, the first two characters of socket IDs are cut off
+      msg: message
+    });
+
+      event.target.chat.value = '';
+  });
+
 /* -------------------------------------- PLAYER STATE MANIPULATION FUNCTIONS */
 
-  function addPlayer(playerId, x, y, keyCode, msg) {
-    players[playerId] = {
-      x: x,
-      y: y,
-      facing: keyCode,
-      msg: msg
+  function addPlayer(id, x, y, keyCode, msg) {
+    if (!players[id]) {
+      players[id] = {
+        x: x,
+        y: y,
+        facing: keyCode,
+        msg: msg
+      }
+    }
+  }
+
+  function updatePlayer(id, x, y, facing, msg) {
+    if (players[id]) {
+      players[id].x = x;
+      players[id].y = y;
+      players[id].facing = facing;
+      players[id].msg = msg;
     }
   }
 
@@ -167,6 +175,7 @@ $(document).ready(function() {
 /* -------------------------------------------- CANVAS MANIPULATION FUNCTIONS */
 // RENDER EVERY PLAYER'S AVATAR
   function redrawCanvas() {
+    // console.log(players);
     ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
     var playerRenderOrder = []; // avatars are to be layered according to their y coordinate
     for (var id in players) {

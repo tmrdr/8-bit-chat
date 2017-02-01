@@ -19,11 +19,10 @@ app.get('/*', function(req, res){
 })
 
 
-//socket
+// socket
 io.on('connection', function(socket){
   // console.log(socket.id);
   // console.log('user connected:', socket.client.id);
-  // console.log("connected sockets:", Object.keys(io.sockets.sockets));
 
   socket.on('newPlayer', function(newPlayerData) {
     console.log("new player:", newPlayerData);
@@ -37,7 +36,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('readyForPlayers', function() {
-    console.log('readyForPlayers');
+    console.log('readyForPlayers fired');
     io.of('/').clients(function(error, clients) {
       console.log("givePlayersList:", clients);
       socket.emit('givePlayersList', clients);
