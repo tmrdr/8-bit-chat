@@ -37,12 +37,15 @@ io.on('connection', function(socket){
   });
 
   socket.on('readyForPlayers', function() {
+    console.log('readyForPlayers');
     io.of('/').clients(function(error, clients) {
+      console.log("givePlayersList:", clients);
       socket.emit('givePlayersList', clients);
     });
   });
 
   socket.on('player state', function(playerData) {
+    console.log('player state:', playerData)
     socket.broadcast.emit('player state', {
       id: playerData.id,
       x: playerData.x,
@@ -51,17 +54,6 @@ io.on('connection', function(socket){
       msg: playerData.msg
     });
   })
-
-  socket.on('movement', function(playerData) {
-    // console.log("player movement:", playerData);
-    socket.broadcast.emit('movement', {
-      id: playerData.id,
-      x: playerData.x,
-      y: playerData.y,
-      facing: playerData.facing,
-      msg: playerData.msg
-    });
-  });
 
   socket.on('chat message', function(playerData){
     io.emit('chat message', {

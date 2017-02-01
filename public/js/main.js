@@ -1,9 +1,31 @@
 $(document).ready(function() {
+  var socket = io();
   console.log("JS online");
   /* SOME INITIALIZATION STUFF */
   // var socket = io();
   console.log("canvas:", $('#canvas')[0])
   var ctx = $('#canvas')[0].getContext("2d");
+
+
+  $('#chat-form').on('submit', function(event){
+    event.preventDefault();
+
+    var message = event.target.chat.value;
+    socket.emit('chat message', {
+      id: socket.id.substring(2, socket.id.length), // in the client list, the first two characters of socket IDs are cut off
+      msg: message
+    });
+
+      event.target.chat.value = '';
+    });
+
+  socket.on('chat message', function(data){
+    console.log("chat data:", data);
+    var p = document.createElement('p');
+    p.innerText = data.msg;
+    document.getElementById('messages').appendChild(p);
+  });
+
 
   // players[socketID] = { x: __, y: __, facing: __, msg: __, colors: { hair, skin, top, bottom } }
   var players = {}; // list of all connected players and relevant data
@@ -15,14 +37,17 @@ $(document).ready(function() {
   var spawnX = canvas.width/2 - yourW/2; // spawn point
   var spawnY = canvas.height/2 - yourH/2; // spawn point
   var spawnFacing = 40;
-  var yourGait = bit; // movement increment
+  var yourGait = bit; // player state increment
 
 /* ------------------------------------------------ SOCKET.IO EVENT LISTENERS */
   socket.on('connect', function() {
+    // in the client list, the first two characters of socket IDs are cut off
+    yourId = socket.id.substring(2, socket.id.length);
+
     // emit socket session ID, initial coordinates (spawn point),
     // and other user data (display name, avatar appearance/colors)
     socket.emit('newPlayer', {
-      id: socket.id.substring(2, socket.id.length),
+      id: yourId,
       x: spawnX,
       y: spawnY,
       facing: spawnFacing,
@@ -30,34 +55,46 @@ $(document).ready(function() {
     });
     // make sure emit parameters corresponds with the way back-end socket.io sets it up
 
-    // in the client list, the first two characters of socket IDs are cut off
-    yourId = socket.id.substring(2, socket.id.length);
-
-    socket.emit('readyForPlayers');
-    console.log('player ready:', yourId, spawnX, spawnY, spawnFacing, "");
-
-    socket.on('givePlayersList', function(playerList) {
-      for (var i=0; i<playerList.length; i++) {
-        var id = playerList[i].substring(2, playerList[i].length);
-        if (id !== socket.id) {
-          addPlayer(id, spawnX, spawnY, spawnFacing, ""); // CHANGE X AND Y TO 'CURRENT' COORDINATES OF EACH PLAYER
-        }
-      }
-      console.log("givePlayersList:", players);
-      redrawCanvas();
-    });
+    socket.emit('readyForPlayers')
+    // console.log('player ready:', yourId, players[yourId]);
   });
 
-  socket.on('newPlayer', function(newPlayer) {
+  socket.on('givePlayersList', function(playerList) {
+    console.log('givePlayersList event:', playerList)
+    for (var i=0; i<playerList.length; i++) {
+      var id = playerList[i].substring(2, playerList[i].length);
+      if (id !== socket.id) {
+        addPlayer(id, spawnX, spawnY, spawnFacing, "");
+      }
+    }
+    console.log("givePlayersList:", players);
+    redrawCanvas();
+  });
+
+  socket.on('newPlayer', function(newPlayer) { // did a new player join?
+    console.log('newPlayer event:', newPlayer)
+    socket.emit('player state', { // send them your player state so they can render it
+      id: yourId,
+      x: players[yourId].x,
+      y: players[yourId].y,
+      facing: players[yourId].facing,
+      msg: players[yourId].msg
+    });
+
     addPlayer(newPlayer.id, newPlayer.x, newPlayer.y, newPlayer.facing, "");
     redrawCanvas();
   });
 
-  socket.on('movement', function(data) {
-    players[data.id].x = data.x;
-    players[data.id].y = data.y;
-    players[data.id].facing = data.facing;
-    players[data.id].msg = data.msg;
+  socket.on('player state', function(data) {
+    console.log('player state event:', data)
+    if (!players[data.id]) { // if the player isn't on your player list, add them
+      addPlayer(data.id, data.x, data.y, data.facing, data.msg);
+    } else { // if they are on your player list, update their state
+      players[data.id].x = data.x;
+      players[data.id].y = data.y;
+      players[data.id].facing = data.facing;
+      players[data.id].msg = data.msg;
+    }
     redrawCanvas();
   });
 
@@ -67,7 +104,7 @@ $(document).ready(function() {
   });
 
   socket.on('disconnect', function(player) {
-    console.log(player.id, 'disconnected');
+    console.log('disconnected:', player.id);
     delete players[player.id];
     console.log(players)
     redrawCanvas();
@@ -77,7 +114,7 @@ $(document).ready(function() {
     if (event.keyCode >= 37 && event.keyCode <= 40){
       event.preventDefault();
       arrowKeyDown(event.keyCode);
-      socket.emit('movement', {
+      socket.emit('player state', {
         id: yourId,
         x: players[yourId].x,
         y: players[yourId].y,
@@ -88,7 +125,7 @@ $(document).ready(function() {
     }
   });
 
-/* ---------------------------------------------- DATA MANIPULATION FUNCTIONS */
+/* -------------------------------------- PLAYER STATE MANIPULATION FUNCTIONS */
 
   function addPlayer(playerId, x, y, keyCode, msg) {
     players[playerId] = {
@@ -100,7 +137,6 @@ $(document).ready(function() {
   }
 
   function arrowKeyDown(keyCode) {
-    console.log("key pressed:", keyCode);
     if (keyCode >= 37 && keyCode <= 40) { // ONLY ARROW KEYS MODIFY YOUR COORDINATES
       players[yourId].facing = keyCode;
       switch(keyCode) {
@@ -132,9 +168,11 @@ $(document).ready(function() {
 // RENDER EVERY PLAYER'S AVATAR
   function redrawCanvas() {
     ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
+    var playerRenderOrder = []; // avatars are to be layered according to their y coordinate
     for (var id in players) {
       avatar(players[id].x, players[id].y, yourW, players[id].facing, players[id].msg);
     }
+    // console.log(Object.keys(players));
 
     ctx.fillStyle = "red";
     ctx.font = "20px Silkscreen";
