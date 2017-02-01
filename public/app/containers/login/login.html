@@ -1,18 +1,13 @@
-<!-- <head>
-    <title>Log In</title>
-    <link rel="stylesheet" type="text/css" href="../css/main.css">
-</head> -->
-
-<form ng-submit="loginComp.userLogin()">
-  <h1>Signup</h1>
+<form ng-submit="userLogin()">
+  <h1>Login</h1>
     <div class="form-group">
         <label for="authName">Username</label>
-        <input id="authName" class="form-control" type="text" name="text" ng-model="signupComp.user.name">
+        <input id="authName" class="form-control" type="text" name="text" ng-model="user.name">
     </div>
 
     <div class="form-group">
         <label for="authPassword">Password</label>
-        <input id="authPassword" class="form-control" type="password" name="password" ng-model="signupComp.user.password">
+        <input id="authPassword" class="form-control" type="password" name="password" ng-model="user.password">
     </div>
 
     <button class="btn btn-primary" type="submit">Login</button>

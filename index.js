@@ -46,7 +46,7 @@ app.use(function (err, req, res, next) {
 
 // POST /api/auth - if authenticated, return a signed JWT
 app.post('/api/auth', function(req, res) {
-  User.findOne({ name: req.body.name }, function(err, user) {  // EMAIL BECOMES NAME ??  also DB
+  User.findOne({ name: req.body.name }, function(err, user) {  
     // return 401 if error or no user
     if (err || !user) return res.status(401).send({ message: 'User not found' });
 

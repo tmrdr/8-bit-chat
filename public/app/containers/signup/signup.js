@@ -11,20 +11,18 @@ function SignupCompCtrl($scope, $state, UserService) {
     name: '',
     password: ''
   };
-  console.log('signup.js here');
+  
   signupComp.userSignup = function() {
     var params = {
       name: signupComp.user.name,
       password: signupComp.user.password
     }
 
-    console.log('params', params);
-
     UserService.createAccount(params).then(function(user) {
       if (user === false) {
         console.log('user create error');
       } else {
-        console.log('got user:', signupComp.user);
+        // console.log('got user:', signupComp.user);
         $state.go('home');
       };
     });
