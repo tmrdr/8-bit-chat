@@ -54,32 +54,32 @@ function HomeCompCtrl() {
       // make sure emit parameters corresponds with the way back-end socket.io sets it up
 
       socket.emit('readyForPlayers');
-      console.log('player ready:', yourId, players[yourId]);
+      // console.log('player ready:', yourId, players[yourId]);
     });
 
     socket.on('givePlayersList', function(playerList) {
-      console.log('givePlayersList event:', playerList)
+      // console.log('givePlayersList event:', playerList)
       for (var i=0; i<playerList.length; i++) {
         var id = playerList[i].substring(2, playerList[i].length);
         if (id !== socket.id) {
           addPlayer(id, spawnPosition, spawnFacing, "", placeholderColors);
         }
       }
-      console.log("givePlayersList:", players);
+      // console.log("givePlayersList:", players);
       redrawCanvas();
     });
 
     socket.on('newPlayer', function(newPlayer) { // did a new player join?
-      console.log('newPlayer event:', newPlayer);
+      // console.log('newPlayer event:', newPlayer);
       addPlayer(newPlayer.id, newPlayer.pos, newPlayer.facing, "", newPlayer.colors);
 
       // send them your player data so they can render it
-      emitYourState();
+      emitYourData();
       redrawCanvas();
     });
 
     socket.on('player data', function(data) {
-      // console.log('player data event:', data);
+      // .log('player data event:', data);
       if (!players[data.id]) { // if the player isn't on your player list, add them
         addPlayer(data.id, data.pos, data.facing, data.msg, data.colors);
       } else { // if they are on your player list, update their state
@@ -102,7 +102,7 @@ function HomeCompCtrl() {
     socket.on('disconnect', function(player) {
       console.log('disconnected:', player.id);
       delete players[player.id];
-      console.log(players)
+      // console.log(players)
       redrawCanvas();
     });
 
