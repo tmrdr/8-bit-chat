@@ -1,5 +1,5 @@
 
-angular.module('ChatApp',['ui.router', 'ngResource'])
+angular.module('ChatApp',['ui.router', 'ngResource', 'minicolors'])
 .config(['$stateProvider', '$urlRouterProvider', '$locationProvider', '$httpProvider',
   function($stateProvider, $urlRouterProvider, $locationProvider, $httpProvider) {
 

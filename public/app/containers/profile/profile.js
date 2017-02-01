@@ -10,9 +10,8 @@ function ProfileCompCtrl() {
   profileComp.customSettings = {
     control: 'brightness',
     theme: 'bootstrap',
-    position: 'bottom right'
+    position: 'top left'
   };
-  console.log($("#shirtColor").val())
 
 }
 
