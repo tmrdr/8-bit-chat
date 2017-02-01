@@ -8,30 +8,6 @@
 <div id="messages"></div>
 
 <script src="/socket.io/socket.io.js"></script>
-<script>
-  var socket = io();
-
-  document.getElementById('chat-form').addEventListener('submit', function(event){
-    event.preventDefault();
-
-    var message = event.target.chat.value;
-    socket.emit('chat message', {
-      id: socket.id.substring(2, socket.id.length), // in the client list, the first two characters of socket IDs are cut off
-      msg: message
-    });
-
-    event.target.chat.value = '';
-  });
-
-  socket.on('chat message', function(data){
-    console.log("chat data:", data);
-    var p = document.createElement('p');
-    p.innerText = data.msg;
-    document.getElementById('messages')
-    // .appendChild(p)
-    ;
-  });
-
-</script>
 <script type="text/javascript" src="js/main.js"></script>
+
 </div>

@@ -46,7 +46,7 @@ app.use(function (err, req, res, next) {
 
 // POST /api/auth - if authenticated, return a signed JWT
 app.post('/api/auth', function(req, res) {
-  User.findOne({ name: req.body.name }, function(err, user) {  
+  User.findOne({ name: req.body.name }, function(err, user) {
     // return 401 if error or no user
     if (err || !user) return res.status(401).send({ message: 'User not found' });
 
@@ -67,11 +67,11 @@ app.get('/*', function(req, res){
   res.sendFile(path.join(__dirname, 'public/index.html'));
 })
 
-//socket
+
+// socket
 io.on('connection', function(socket){
   // console.log(socket.id);
   // console.log('user connected:', socket.client.id);
-  // console.log("connected sockets:", Object.keys(io.sockets.sockets));
 
   socket.on('newPlayer', function(newPlayerData) {
     console.log("new player:", newPlayerData);
@@ -85,12 +85,15 @@ io.on('connection', function(socket){
   });
 
   socket.on('readyForPlayers', function() {
+    console.log('readyForPlayers fired');
     io.of('/').clients(function(error, clients) {
+      console.log("givePlayersList:", clients);
       socket.emit('givePlayersList', clients);
     });
   });
 
   socket.on('player state', function(playerData) {
+    console.log('player state:', playerData)
     socket.broadcast.emit('player state', {
       id: playerData.id,
       x: playerData.x,
@@ -99,17 +102,6 @@ io.on('connection', function(socket){
       msg: playerData.msg
     });
   })
-
-  socket.on('movement', function(playerData) {
-    // console.log("player movement:", playerData);
-    socket.broadcast.emit('movement', {
-      id: playerData.id,
-      x: playerData.x,
-      y: playerData.y,
-      facing: playerData.facing,
-      msg: playerData.msg
-    });
-  });
 
   socket.on('chat message', function(playerData){
     io.emit('chat message', {

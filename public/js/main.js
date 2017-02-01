@@ -1,4 +1,5 @@
 $(document).ready(function() {
+  var socket = io();
   console.log("JS online");
   /* SOME INITIALIZATION STUFF */
   // var socket = io();
@@ -15,14 +16,17 @@ $(document).ready(function() {
   var spawnX = canvas.width/2 - yourW/2; // spawn point
   var spawnY = canvas.height/2 - yourH/2; // spawn point
   var spawnFacing = 40;
-  var yourGait = bit; // movement increment
+  var yourGait = bit; // player state increment
 
 /* ------------------------------------------------ SOCKET.IO EVENT LISTENERS */
   socket.on('connect', function() {
-    // emit socket session ID, initial coordinates (spawn point),
-    // and other user data (display name, avatar appearance/colors)
+    console.log('connected to socket', socket);
+    // in the client list, the first two characters of socket IDs are cut off
+    yourId = socket.id.substring(2, socket.id.length);
+    addPlayer(yourId, spawnX, spawnY, spawnFacing, "")
+
     socket.emit('newPlayer', {
-      id: socket.id.substring(2, socket.id.length),
+      id: yourId,
       x: spawnX,
       y: spawnY,
       facing: spawnFacing,
@@ -30,77 +34,117 @@ $(document).ready(function() {
     });
     // make sure emit parameters corresponds with the way back-end socket.io sets it up
 
-    // in the client list, the first two characters of socket IDs are cut off
-    yourId = socket.id.substring(2, socket.id.length);
-
     socket.emit('readyForPlayers');
-    console.log('player ready:', yourId, spawnX, spawnY, spawnFacing, "");
+    console.log('player ready:', yourId, players[yourId]);
+  });
 
-    socket.on('givePlayersList', function(playerList) {
-      for (var i=0; i<playerList.length; i++) {
-        var id = playerList[i].substring(2, playerList[i].length);
-        if (id !== socket.id) {
-          addPlayer(id, spawnX, spawnY, spawnFacing, ""); // CHANGE X AND Y TO 'CURRENT' COORDINATES OF EACH PLAYER
-        }
+  socket.on('givePlayersList', function(playerList) {
+    console.log('givePlayersList event:', playerList)
+    for (var i=0; i<playerList.length; i++) {
+      var id = playerList[i].substring(2, playerList[i].length);
+      if (id !== socket.id) {
+        addPlayer(id, spawnX, spawnY, spawnFacing, "");
       }
-      console.log("givePlayersList:", players);
-      redrawCanvas();
-    });
+    }
+    console.log("givePlayersList:", players);
+    redrawCanvas();
   });
 
-  socket.on('newPlayer', function(newPlayer) {
+  socket.on('newPlayer', function(newPlayer) { // did a new player join?
+    console.log('newPlayer event:', newPlayer);
     addPlayer(newPlayer.id, newPlayer.x, newPlayer.y, newPlayer.facing, "");
+
+    // send them your player state so they can render it
+    emitYourState();
     redrawCanvas();
   });
 
-  socket.on('movement', function(data) {
-    players[data.id].x = data.x;
-    players[data.id].y = data.y;
-    players[data.id].facing = data.facing;
-    players[data.id].msg = data.msg;
+  socket.on('player state', function(data) {
+    // console.log('player state event:', data);
+    if (!players[data.id]) { // if the player isn't on your player list, add them
+      addPlayer(data.id, data.x, data.y, data.facing, data.msg);
+    } else { // if they are on your player list, update their state
+      updatePlayer(data.id, data.x, data.y, data.facing, data.msg);
+    }
     redrawCanvas();
   });
+
 
   socket.on('chat message', function(data) {
+    // console.log("chat data:", data);
     players[data.id].msg = data.msg;
+
+    var p = document.createElement('p');
+    p.innerText = data.msg;
+    document.getElementById('messages').appendChild(p);
+
     redrawCanvas();
   });
 
   socket.on('disconnect', function(player) {
-    console.log(player.id, 'disconnected');
+    console.log('disconnected:', player.id);
     delete players[player.id];
     console.log(players)
     redrawCanvas();
-  })
+  });
+
+/* ------------------------------------------ STREAMLINED SOCKET.IO FUNCTIONS */
+  function emitYourState() {
+    socket.emit('player state', {
+      id: yourId,
+      x: players[yourId].x,
+      y: players[yourId].y,
+      facing: players[yourId].facing,
+      msg: players[yourId].msg
+    });
+  }
+
+/* --------------------------------------------- ELEMENT/DOCUMENT EVENT STUFF */
 
   $(document).keydown(function(event) {
     if (event.keyCode >= 37 && event.keyCode <= 40){
       event.preventDefault();
       arrowKeyDown(event.keyCode);
-      socket.emit('movement', {
-        id: yourId,
-        x: players[yourId].x,
-        y: players[yourId].y,
-        facing: players[yourId].facing,
-        msg: players[yourId].msg
-      });
+      emitYourState();
       redrawCanvas();
     }
   });
 
-/* ---------------------------------------------- DATA MANIPULATION FUNCTIONS */
+  $('#chat-form').on('submit', function(event){
+    event.preventDefault();
 
-  function addPlayer(playerId, x, y, keyCode, msg) {
-    players[playerId] = {
-      x: x,
-      y: y,
-      facing: keyCode,
-      msg: msg
+    var message = event.target.chat.value;
+    socket.emit('chat message', {
+      id: yourId, // in the client list, the first two characters of socket IDs are cut off
+      msg: message
+    });
+
+      event.target.chat.value = '';
+  });
+
+/* -------------------------------------- PLAYER STATE MANIPULATION FUNCTIONS */
+
+  function addPlayer(id, x, y, keyCode, msg) {
+    if (!players[id]) {
+      players[id] = {
+        x: x,
+        y: y,
+        facing: keyCode,
+        msg: msg
+      }
+    }
+  }
+
+  function updatePlayer(id, x, y, facing, msg) {
+    if (players[id]) {
+      players[id].x = x;
+      players[id].y = y;
+      players[id].facing = facing;
+      players[id].msg = msg;
     }
   }
 
   function arrowKeyDown(keyCode) {
-    console.log("key pressed:", keyCode);
     if (keyCode >= 37 && keyCode <= 40) { // ONLY ARROW KEYS MODIFY YOUR COORDINATES
       players[yourId].facing = keyCode;
       switch(keyCode) {
@@ -131,10 +175,13 @@ $(document).ready(function() {
 /* -------------------------------------------- CANVAS MANIPULATION FUNCTIONS */
 // RENDER EVERY PLAYER'S AVATAR
   function redrawCanvas() {
+    // console.log(players);
     ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
+    var playerRenderOrder = []; // avatars are to be layered according to their y coordinate
     for (var id in players) {
       avatar(players[id].x, players[id].y, yourW, players[id].facing, players[id].msg);
     }
+    // console.log(Object.keys(players));
 
     ctx.fillStyle = "red";
     ctx.font = "20px Silkscreen";
