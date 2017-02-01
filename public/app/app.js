@@ -31,4 +31,13 @@ angular.module('ChatApp',['ui.router', 'ngResource', 'minicolors'])
   $locationProvider.html5Mode(true);
 
   }
-]);
+])
+.run(function($transitions) {
+  $transitions.onStart({ to: 'profile' }, function(trans) {
+    var auth = trans.injector().get('Auth')
+    if (!auth.isLoggedIn()) {
+      // User isn't authenticated. Redirect to a new Target State
+      return trans.router.stateService.target('signup');
+    }
+  });
+});
