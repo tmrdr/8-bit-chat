@@ -1,13 +1,23 @@
 <div class="container">
-  <h1 class="redtext">your profile</h1>
-  <h2 class="redtext">Username: {{profileComp.username}}</h2>
-  <div class="hair" ng-style="{'background-color': profileComp.userSettings.hairColor}"></div>
-  <div class="top" ng-style="{'background-color': profileComp.userSettings.topColor}"></div>
-  <div class="torso" ng-style="{'background-color': profileComp.userSettings.torsoColor}"></div>
-  <div class="legs" ng-style="{'background-color': profileComp.userSettings.legsColor}"></div>
-  <div>
-    <form id="colors">
-      <input id="shirtColor" minicolors ng-model="profileComp.userSettings.torsoColor"/>
-    </form>
-  </div>
+    <h1 class="redtext">your profile</h1>
+    <h2 class="redtext">{{profileComp.username}}</h2>
+    <div class="person">
+        <div class="hair" ng-style="{'background-color': profileComp.userSettings.hairColor}"></div>
+        <div class="top" ng-style="{'background-color': profileComp.userSettings.topColor}">
+            <div id="left" class="eyes"></div>
+            <div id="right" class="eyes"></div>
+        </div>
+        <div class="torso" ng-style="{'background-color': profileComp.userSettings.torsoColor}"></div>
+        <div class="legs" ng-style="{'background-color': profileComp.userSettings.legsColor}"></div>
+    </div>
+
+    <div class="customizer">
+      <form id="colors">
+        <input class="colorPicker" id="topColor" minicolors ng-model="profileComp.userSettings.topColor"/>
+        <input class="colorPicker" id="torsoColor" minicolors ng-model="profileComp.userSettings.torsoColor"/>
+        <input class="colorPicker" id="legsColor" minicolors ng-model="profileComp.userSettings.legsColor"/>
+      </form>
+    </div>
+
+
 </div>
