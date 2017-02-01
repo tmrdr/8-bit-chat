@@ -69,7 +69,6 @@ $(document).ready(function() {
     redrawCanvas();
   });
 
-
   socket.on('chat message', function(data) {
     // console.log("chat data:", data);
     players[data.id].msg = data.msg;
@@ -119,7 +118,15 @@ $(document).ready(function() {
       msg: message
     });
 
-      event.target.chat.value = '';
+    event.target.chat.value = '';
+
+    setTimeout(function() {
+      socket.emit('chat message', {
+        id: yourId,
+        msg: ''
+      });
+    }, message.length*1000);
+
   });
 
 /* -------------------------------------- PLAYER STATE MANIPULATION FUNCTIONS */
@@ -178,10 +185,15 @@ $(document).ready(function() {
     // console.log(players);
     ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
     var playerRenderOrder = []; // avatars are to be layered according to their y coordinate
-    for (var id in players) {
-      avatar(players[id].x, players[id].y, yourW, players[id].facing, players[id].msg);
-    }
+    // for (var id in players) {
+    //   avatar(players[id].x, players[id].y, yourW, players[id].facing, players[id].msg);
+    // }
     // console.log(Object.keys(players));
+    // console.log(Object.keys(players).sort(function(a,b){return players[a].y-players[b].y}));
+    playerRenderOrder = Object.keys(players).sort(function(a,b){return players[a].y-players[b].y});
+    playerRenderOrder.forEach(function(id) {
+      avatar(players[id].x, players[id].y, yourW, players[id].facing, players[id].msg);
+    });
 
     ctx.fillStyle = "red";
     ctx.font = "20px Silkscreen";
