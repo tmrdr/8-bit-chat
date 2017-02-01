@@ -5,7 +5,7 @@ angular.module('ChatApp')
   controllerAs: 'loginComp'
 });
 
-function LoginCompCtrl($scope, $state, UserService) {
+function LoginCompCtrl($scope, $state, UserService, Alerts) {
   $scope.user = {
     name: '',
     password: ''
@@ -16,10 +16,11 @@ function LoginCompCtrl($scope, $state, UserService) {
     UserService.login($scope.user).then(function(user) {
       console.log("login response:", user);
       if (user !== false) {
+
         $state.go('home');
       }
     });
   };
 }
 
-LoginCompCtrl.$inject = ['$scope', '$state', 'UserService'];
+LoginCompCtrl.$inject = ['$scope', '$state', 'UserService', 'Alerts'];

@@ -20,8 +20,8 @@
 border: 1px solid black;
 }
 
-#char {
-border: 1px solid black;
+.person {
+display: inline-block;
 }
 
 .container {
@@ -44,6 +44,17 @@ border: 1px solid black;
   text-align: center;
   margin: 0 auto;
   margin-top:0px;
+  position: relative;
+}
+.eyes {
+  height: 20px;
+  width: 20px;
+  background-color: black;
+  position: relative;
+}
+#left {
+  top: 20px;
+  left: 50px;
 }
 .torso {
   height: 120px;
@@ -63,9 +74,27 @@ border: 1px solid black;
 }
 #colors {
   display: inline-block;
-  margin-top: 25px;
+  float: right;
+  margin-top: 35px;
+}
+#topColor{
+  margin-top: 70px;
+  display: inline-block;
+}
+#torsoColor{
+  margin-top: 100px;
+  display: inline-block;
+}
+#legsColor{
+  margin-top: 40px;
+  display: inline-block;
 }
 .minicolors-swatch{
-  margin-top: -3.8px;
-  margin-left: -40px;
+  margin-top: 100px;
+  margin-left: 0px;
+}
+.customizer {
+  height: 340px;
+  display: inline-block;
+  margin-left: 20px;
 }

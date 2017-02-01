@@ -5,13 +5,13 @@ angular.module('ChatApp')
   controllerAs: 'signupComp'
 });
 
-function SignupCompCtrl($scope, $state, UserService) {
+function SignupCompCtrl($scope, $state, UserService, Alerts) {
   signupComp = this;
   signupComp.user = {
     name: '',
     password: ''
   };
-  
+
   signupComp.userSignup = function() {
     var params = {
       name: signupComp.user.name,
@@ -20,13 +20,15 @@ function SignupCompCtrl($scope, $state, UserService) {
 
     UserService.createAccount(params).then(function(user) {
       if (user === false) {
+        Alerts.add('danger', 'Error. See console');
         console.log('user create error');
       } else {
         // console.log('got user:', signupComp.user);
+        Alerts.add('success', 'Signed in!');
         $state.go('home');
       };
     });
   };
 }
 
-SignupCompCtrl.$inject = ['$scope', '$state', 'UserService'];
+SignupCompCtrl.$inject = ['$scope', '$state', 'UserService', 'Alerts'];

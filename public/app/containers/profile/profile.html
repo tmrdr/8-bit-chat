@@ -1,36 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Profile</title>
+<div class="container">
+    <h1 class="redtext">your profile</h1>
+    <h2 class="redtext">{{profileComp.username}}</h2>
+    <div class="person">
+        <div class="hair" ng-style="{'background-color': profileComp.userSettings.hairColor}"></div>
+        <div class="top" ng-style="{'background-color': profileComp.userSettings.topColor}">
+            <div id="left" class="eyes"></div>
+            <div id="right" class="eyes"></div>
+        </div>
+        <div class="torso" ng-style="{'background-color': profileComp.userSettings.torsoColor}"></div>
+        <div class="legs" ng-style="{'background-color': profileComp.userSettings.legsColor}"></div>
+    </div>
 
-    <!-- Bootstrap -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-  </head>
-  <body>
-    <div class="container">
-      <h1 class="redtext">your profile</h1>
-      <h2 class="redtext">Username</h2>
-      <div class="hair"></div>
-      <div class="top"></div>
-      <div class="torso"></div>
-      <div class="legs"></div>
-      <div>
-        <form id="colors">
-          <input minicolors ng-model="profileComp.customSettings"/>
-        </form>
-      </div>
+    <div class="customizer">
+      <form id="colors">
+        <input class="colorPicker" id="topColor" minicolors ng-model="profileComp.userSettings.topColor"/>
+        <input class="colorPicker" id="torsoColor" minicolors ng-model="profileComp.userSettings.torsoColor"/>
+        <input class="colorPicker" id="legsColor" minicolors ng-model="profileComp.userSettings.legsColor"/>
+      </form>
     </div>
 
 
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="app/containers/profile/profile.js"></script>
-  </body>
-</html>
+</div>
