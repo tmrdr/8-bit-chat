@@ -7,16 +7,14 @@ angular.module('ChatApp')
 
 function HomeCompCtrl() {
   var socket = io();
+  console.log("home.js online");
+
   this.$onInit = function () {
   /* ---------------------------------------------- SOME INITIALIZATION STUFF */
-    console.log("home.js online");
-
     var ctx = $('#canvas')[0].getContext("2d");
-
     // players[socketID] = { x: __, y: __, facing: __, msg: __, colors: { hair, skin, top, bottom } }
     var players = {}; // list of all connected players and relevant data
     var yourId;
-
     var bit = 5; // size of one "pixel"
     var yourW = bit*4; // avatar width
     var yourH = yourW*3; // avatar height
@@ -196,22 +194,19 @@ function HomeCompCtrl() {
   /* ------------------------------------------ CANVAS MANIPULATION FUNCTIONS */
     // RENDER EVERY PLAYER'S AVATAR
     function redrawCanvas() {
-      // console.log(players);
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
-      var playerRenderOrder = []; // avatars are to be layered according to their y coordinate
-      // for (var id in players) {
-      //   avatar(players[id].x, players[id].y, yourW, players[id].facing, players[id].msg);
-      // }
-      // console.log(Object.keys(players));
-      // console.log(Object.keys(players).sort(function(a,b){return players[a].y-players[b].y}));
-      playerRenderOrder = Object.keys(players).sort(function(a,b){return players[a].y-players[b].y});
-      playerRenderOrder.forEach(function(id) {
-        avatar(players[id].x, players[id].y, yourW, players[id].facing, players[id].msg);
-      });
+      if($('#canvas')[0]) { // run only if the canvas element exists
+        // console.log(players);
+        ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
+        var playerRenderOrder = []; // avatars are to be layered according to their y coordinate
+        playerRenderOrder = Object.keys(players).sort(function(a,b){return players[a].y-players[b].y});
+        playerRenderOrder.forEach(function(id) {
+          avatar(players[id].x, players[id].y, yourW, players[id].facing, players[id].msg);
+        });
 
-      ctx.fillStyle = "red";
-      ctx.font = "20px Silkscreen";
-      ctx.fillText("x: " + players[yourId].x + " y: " + players[yourId].y ,10,50);
+        ctx.fillStyle = "red";
+        ctx.font = "20px Silkscreen";
+        ctx.fillText("x: " + players[yourId].x + " y: " + players[yourId].y ,10,50);
+      }
     }
 
     // DRAW BASIC RECTANGLES
@@ -276,12 +271,8 @@ function HomeCompCtrl() {
   };
 
   this.$onDestroy = function () {
-    console.log($("#chat-container")[0]);
     $("#chat-container").empty();
     socket.disconnect();
-    players = null;
-    yourId = null;
-    console.log($("#chat-container")[0]);
   };
 
 }
