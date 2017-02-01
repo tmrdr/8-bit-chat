@@ -75,10 +75,10 @@ io.on('connection', function(socket){
     console.log("new player:", newPlayerData);
     socket.broadcast.emit('newPlayer', {
       id: newPlayerData.id,
-      x: newPlayerData.x,
-      y: newPlayerData.y,
+      pos: newPlayerData.pos,
       facing: newPlayerData.facing,
-      msg: newPlayerData.msg
+      msg: newPlayerData.msg,
+      colors: newPlayerData.colors
     });
   });
 
@@ -90,14 +90,23 @@ io.on('connection', function(socket){
     });
   });
 
-  socket.on('player state', function(playerData) {
+  socket.on('player data', function(playerData) {
+    // console.log('player state:', playerData)
+    socket.broadcast.emit('player data', {
+      id: playerData.id,
+      pos: playerData.pos,
+      facing: playerData.facing,
+      msg: playerData.msg,
+      colors: playerData.colors
+    });
+  })
+
+  socket.on('movement', function(playerData) {
     // console.log('player state:', playerData)
     socket.broadcast.emit('player state', {
       id: playerData.id,
-      x: playerData.x,
-      y: playerData.y,
-      facing: playerData.facing,
-      msg: playerData.msg
+      pos: playerData.pos,
+      facing: playerData.facing
     });
   })
 

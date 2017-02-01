@@ -10,32 +10,46 @@ function HomeCompCtrl() {
   console.log("home.js online");
 
   this.$onInit = function () {
+/* ---------------------------- CHAT FUNCTIONALITY -------------------------- */
   /* ---------------------------------------------- SOME INITIALIZATION STUFF */
     var ctx = $('#canvas')[0].getContext("2d");
-    // players[socketID] = { x: __, y: __, facing: __, msg: __, colors: { hair, skin, top, bottom } }
+    // players[socketID] = { x: __, y: __, facing: __, msg: __, colors: { hair: "#FFFFFF", skin: "#D2691E", torso: "#FF0000", legs: "#0000FF" } }
     var players = {}; // list of all connected players and relevant data
     var yourId;
     var bit = 5; // size of one "pixel"
     var yourW = bit*4; // avatar width
     var yourH = yourW*3; // avatar height
-    var spawnX = canvas.width/2 - yourW/2; // spawn point
-    var spawnY = canvas.height/2 - yourH/2; // spawn point
+    // var spawnX = canvas.width/2 - yourW/2; // spawn point
+    // var spawnY = canvas.height/2 - yourH/2; // spawn point
+    var spawnPosition = {
+      x: canvas.width/2 - yourW/2,
+      y: canvas.height/2 - yourH/2
+    }
     var spawnFacing = 40;
-    var yourGait = bit; // player state increment
+    var placeholderColors = {
+      hair: "#000000",
+      skin: "#D2691E",
+      torso: "#FF0000",
+      legs: "#0000FF"
+    };
+    var yourGait = bit; // player data increment
 
   /* ---------------------------------------------- SOCKET.IO EVENT LISTENERS */
     socket.on('connect', function() {
       console.log('connected to socket', socket);
       // in the client list, the first two characters of socket IDs are cut off
       yourId = socket.id.substring(2, socket.id.length);
-      addPlayer(yourId, spawnX, spawnY, spawnFacing, "")
+      addPlayer(yourId, spawnPosition, spawnFacing, "", placeholderColors)
 
       socket.emit('newPlayer', {
         id: yourId,
-        x: spawnX,
-        y: spawnY,
+        pos: {
+          x: spawnPosition.x,
+          y: spawnPosition.y
+        },
         facing: spawnFacing,
-        msg: ""
+        msg: "",
+        colors: placeholderColors
       });
       // make sure emit parameters corresponds with the way back-end socket.io sets it up
 
@@ -48,7 +62,7 @@ function HomeCompCtrl() {
       for (var i=0; i<playerList.length; i++) {
         var id = playerList[i].substring(2, playerList[i].length);
         if (id !== socket.id) {
-          addPlayer(id, spawnX, spawnY, spawnFacing, "");
+          addPlayer(id, spawnPosition, spawnFacing, "", placeholderColors);
         }
       }
       console.log("givePlayersList:", players);
@@ -57,19 +71,19 @@ function HomeCompCtrl() {
 
     socket.on('newPlayer', function(newPlayer) { // did a new player join?
       console.log('newPlayer event:', newPlayer);
-      addPlayer(newPlayer.id, newPlayer.x, newPlayer.y, newPlayer.facing, "");
+      addPlayer(newPlayer.id, newPlayer.pos, newPlayer.facing, "", newPlayer.colors);
 
-      // send them your player state so they can render it
+      // send them your player data so they can render it
       emitYourState();
       redrawCanvas();
     });
 
-    socket.on('player state', function(data) {
-      // console.log('player state event:', data);
+    socket.on('player data', function(data) {
+      // console.log('player data event:', data);
       if (!players[data.id]) { // if the player isn't on your player list, add them
-        addPlayer(data.id, data.x, data.y, data.facing, data.msg);
+        addPlayer(data.id, data.pos, data.facing, data.msg, data.colors);
       } else { // if they are on your player list, update their state
-        updatePlayer(data.id, data.x, data.y, data.facing, data.msg);
+        updatePlayer(data.id, data.pos, data.facing, data.msg);
       }
       redrawCanvas();
     });
@@ -93,30 +107,30 @@ function HomeCompCtrl() {
     });
 
   /* ---------------------------------------- STREAMLINED SOCKET.IO FUNCTIONS */
-    function emitYourState() {
-      socket.emit('player state', {
+    function emitYourData() {
+      socket.emit('player data', {
         id: yourId,
-        x: players[yourId].x,
-        y: players[yourId].y,
+        pos: players[yourId].pos,
         facing: players[yourId].facing,
-        msg: players[yourId].msg
+        msg: players[yourId].msg,
+        colors: players[yourId].colors
+      });
+    }
+
+    function emitYourMovement() {
+      socket.emit('movement', {
+        id: yourId,
+        pos: players[yourId].pos,
+        facing: players[yourId].facing,
       });
     }
 
   /* ------------------------------------------- ELEMENT/DOCUMENT EVENT STUFF */
-    window.onbeforeunload = function(e) {
-      socket.disconnect();
-    };
-
-    $(window).on('hashchange', function(e){
-      socket.disconnect();
-    });
-
     $(document).keydown(function(event) {
       if (event.keyCode >= 37 && event.keyCode <= 40){
         event.preventDefault();
         arrowKeyDown(event.keyCode);
-        emitYourState();
+        emitYourMovement();
         redrawCanvas();
       }
     });
@@ -126,12 +140,13 @@ function HomeCompCtrl() {
 
       var message = event.target.chat.value;
       socket.emit('chat message', {
-        id: yourId, // in the client list, the first two characters of socket IDs are cut off
+        id: yourId,
         msg: message
       });
 
-      event.target.chat.value = '';
+      event.target.chat.value = ''; // clear message from text input
 
+      // clear message from canvas after a timeout
       setTimeout(function() {
         socket.emit('chat message', {
           id: yourId,
@@ -142,22 +157,24 @@ function HomeCompCtrl() {
     });
 
   /* ------------------------------------ PLAYER STATE MANIPULATION FUNCTIONS */
-
-    function addPlayer(id, x, y, keyCode, msg) {
+    function addPlayer(id, pos, keyCode, msg, colors) {
       if (!players[id]) {
         players[id] = {
-          x: x,
-          y: y,
+          pos: {
+            x: pos.x,
+            y: pos.y
+          },
           facing: keyCode,
-          msg: msg
+          msg: msg,
+          colors: colors
         }
       }
     }
 
-    function updatePlayer(id, x, y, facing, msg) {
+    function updatePlayer(id, pos, facing, msg) {
       if (players[id]) {
-        players[id].x = x;
-        players[id].y = y;
+        players[id].pos.x = pos.x;
+        players[id].pos.y = pos.y;
         players[id].facing = facing;
         players[id].msg = msg;
       }
@@ -168,23 +185,23 @@ function HomeCompCtrl() {
         players[yourId].facing = keyCode;
         switch(keyCode) {
           case 37: // left arrow: keyCode 37
-            if (players[yourId].x > 0) {
-              players[yourId].x -= yourGait;
+            if (players[yourId].pos.x > 0) {
+              players[yourId].pos.x -= yourGait;
             }
             break;
           case 38: // up arrow: keyCode 38
-            if (players[yourId].y > 0) {
-              players[yourId].y -= yourGait;
+            if (players[yourId].pos.y > 0) {
+              players[yourId].pos.y -= yourGait;
             }
             break;
           case 39: // right arrow: keyCode 39
-            if (players[yourId].x+yourW < canvas.width) {
-              players[yourId].x += yourGait;
+            if (players[yourId].pos.x+yourW < canvas.width) {
+              players[yourId].pos.x += yourGait;
             }
             break;
           case 40: // down arrow: keyCode 40
-            if (players[yourId].y+yourH < canvas.height) {
-              players[yourId].y += yourGait;
+            if (players[yourId].pos.y+yourH < canvas.height) {
+              players[yourId].pos.y += yourGait;
             }
             break;
         }
@@ -192,40 +209,37 @@ function HomeCompCtrl() {
     }
 
   /* ------------------------------------------ CANVAS MANIPULATION FUNCTIONS */
-    // RENDER EVERY PLAYER'S AVATAR
-    function redrawCanvas() {
+    function redrawCanvas() { // RENDER EVERY ASSET / PLAYER'S AVATAR
       if($('#canvas')[0]) { // run only if the canvas element exists
         // console.log(players);
         ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
         var playerRenderOrder = []; // avatars are to be layered according to their y coordinate
         playerRenderOrder = Object.keys(players).sort(function(a,b){return players[a].y-players[b].y});
         playerRenderOrder.forEach(function(id) {
-          avatar(players[id].x, players[id].y, yourW, players[id].facing, players[id].msg);
+          avatar(players[id].pos.x, players[id].pos.y, yourW, players[id].facing, players[id].msg, players[id].colors);
         });
 
         ctx.fillStyle = "red";
         ctx.font = "20px Silkscreen";
-        ctx.fillText("x: " + players[yourId].x + " y: " + players[yourId].y ,10,50);
+        ctx.fillText("x: " + players[yourId].pos.x + " y: " + players[yourId].pos.y ,10,50);
       }
     }
 
-    // DRAW BASIC RECTANGLES
-    function rect(x, y, w, h) {
+    function rect(x, y, w, h) { // DRAW BASIC RECTANGLES
       ctx.beginPath();
       ctx.rect(x,y,w,h);
       ctx.closePath();
       ctx.fill();
     }
 
-    // DRAW FULL AVATARS
-    function avatar(x, y, w, keyCode, msg) {
-      ctx.fillStyle = 'chocolate'; // skin
+    function avatar(x, y, w, keyCode, msg, colors) { // DRAW FULL AVATARS
+      ctx.fillStyle = colors.skin; // skin
       rect(x, y, w, w);
-      ctx.fillStyle = 'red'; // top
+      ctx.fillStyle = colors.torso; // torso
       rect(x, y+w, w, w);
-      ctx.fillStyle = 'blue'; // bottom
+      ctx.fillStyle = colors.legs; // legs
       rect(x, y+(w*2), w, w);
-      ctx.fillStyle = 'black'; // hair
+      ctx.fillStyle = colors.hair; // hair
       rect(x, y, w, w/4);
 
       if (keyCode) {
@@ -248,8 +262,7 @@ function HomeCompCtrl() {
 
     }
 
-    // DRAW TEXT
-    function wrapText(text, x, y, maxWidth, lineHeight) {
+    function wrapText(text, x, y, maxWidth, lineHeight) { // DRAW TEXT
       var words = text.split(' ');
       var line = '';
 
