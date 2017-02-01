@@ -7,14 +7,14 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand redtext" href="/">8 Bit Chat</a>
+    <a class="navbar-brand redtext" ui-sref="home()">8 Bit Chat</a>
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="/signup" ng-hide="Auth.isLoggedIn()" class="redtext">Signup</a></li>
-      <li><a href="/login" ng-hide="Auth.isLoggedIn()" class="redtext">Login</a></li>
+      <li><a ui-sref="signup()" ng-hide="Auth.isLoggedIn()" class="redtext">Signup</a></li>
+      <li><a ui-sref="login()" ng-hide="Auth.isLoggedIn()" class="redtext">Login</a></li>
       <li><a ui-sref="profile()" ng-show="Auth.isLoggedIn()" class="redtext">Profile</a></li>
       <li><a ng-click="logout()" ng-show="Auth.isLoggedIn()" class="redtext">Logout</a></li>
     </ul>

@@ -10,6 +10,12 @@
   text-decoration: none;
 }
 
+#brand-logo {
+  height: 25px;
+  width: 25px;
+  float: left;
+}
+
 #canvas {
 border: 1px solid black;
 }
