@@ -10,6 +10,26 @@ var UserSchema = mongoose.Schema({
   password: {
     type: String,
     required: true
+  },
+  hairColor: {
+    type: String,
+    required: true,
+    default: "black"
+  },
+  topColor: {
+    type: String,
+    required: true,
+    default: "chocolate"
+  },
+  torsoColor: {
+    type: String,
+    required: true,
+    default: "red"
+  },
+  legsColor: {
+    type: String,
+    required: true,
+    default: "blue"
   }
 });
 
@@ -17,7 +37,11 @@ UserSchema.set('toJSON', {
   transform: function(doc, ret, options) {
     var returnJson = {
       id: ret._id,
-      name: ret.name
+      name: ret.name,
+      hair: ret.hair,
+      head: ret.head,
+      torso: ret.torso,
+      legs: ret.legs
     };
     return returnJson;
   }

@@ -93,3 +93,16 @@ angular.module('ChatApp')
     }
   }
 }])
+  .factory('UpdateUser', ['Auth', function(Auth) {
+    console.log('updating');
+    return {    
+      updateColors: function(params) {
+        var URL = '/api/users';
+        var req = {
+          url: URL,
+          method: 'POST',
+          data: params
+        }
+      }
+    }
+}])
