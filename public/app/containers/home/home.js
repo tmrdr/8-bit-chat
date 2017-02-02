@@ -16,7 +16,7 @@ function HomeCompCtrl() {
     // players[socketID] = { x: __, y: __, facing: __, msg: __, colors: { hair: "#FFFFFF", skin: "#D2691E", torso: "#FF0000", legs: "#0000FF" } }
     var players = {}; // list of all connected players and relevant data
     var yourId;
-    var bit = 10; // size of one "pixel"
+    var bit = 5; // size of one "pixel"
     var yourW = bit*4; // avatar width
     var yourH = yourW*3; // avatar height
     var spawnPosition = {
