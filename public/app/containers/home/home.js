@@ -5,10 +5,11 @@ angular.module('ChatApp')
   controllerAs: 'homeComp'
 });
 
-function HomeCompCtrl(Auth, GetDetails) {
+function HomeCompCtrl(Auth, UserService) {
   var homeComp = this;
 
   var socket = io();
+
   var yourColors = { // default colors
     hair: 'black',
     skin: 'chocolate',
@@ -16,11 +17,11 @@ function HomeCompCtrl(Auth, GetDetails) {
     legs: 'blue'
   };
 
-  if(Auth.currentUser()) { // if a user is signed in
-    GetDetails.getColors().then(function success(res) {
+  if(Auth.currentUser()) {
+    UserService.getColors().then(function success(res) {
       homeComp.userSettings = res.data;
       console.log(homeComp.userSettings);
-      yourColors = { // then retrieve their colors
+      yourColors = {
         hair: homeComp.userSettings.hairColor,
         skin: homeComp.userSettings.topColor,
         torso: homeComp.userSettings.torsoColor,
@@ -167,8 +168,7 @@ function HomeCompCtrl(Auth, GetDetails) {
       }
     });
 
-    $('#chat-form').on('submit', function(event){
-      event.preventDefault();
+    homeComp.chatSubmit = function() {
       clearTimeout(messageTimeout);
 
       var message = event.target.chat.value;
@@ -186,8 +186,7 @@ function HomeCompCtrl(Auth, GetDetails) {
           msg: ''
         });
       }, message.length*1000);
-
-    });
+    }
 
   /* ------------------------------------ PLAYER STATE MANIPULATION FUNCTIONS */
     function addPlayer(id, pos, keyCode, msg, colors) {
@@ -314,14 +313,43 @@ function HomeCompCtrl(Auth, GetDetails) {
           marginW = 2*bit,
           marginH = 1.4;
       var bubbleX, bubbleY;
+      var maxMetricsW = 0;
 
       metrics = ctx.measureText(text);
-      if (metrics.width >= maxWidth) {
-        bubbleW = maxWidth + marginW; // account for bubble margins
-        bubbleH = lineHeight * (Math.floor(metrics.width/maxWidth) + marginH);
-      } else {
+      if (metrics.width <= maxWidth) {
         bubbleW = metrics.width + marginW;
         bubbleH = lineHeight * marginH;
+      } else {
+        for (var i = 0; i < words.length; i++) {
+          test = words[i];
+          metrics = ctx.measureText(test);
+          while (metrics.width > maxWidth) {
+            // Determine how much of the word will fit
+            test = test.substring(0, test.length - 1);
+            metrics = ctx.measureText(test);
+          }
+          if (words[i] != test) {
+            words.splice(i + 1, 0,  words[i].substr(test.length))
+            words[i] = test;
+          }
+
+          test = line + words[i] + ' ';
+          metrics = ctx.measureText(test);
+          if (metrics.width > maxMetricsW) {
+            maxMetricsW = metrics.width;
+          }
+
+          if (metrics.width > maxWidth && i > 0) {
+            line = words[i] + ' ';
+            y += lineHeight;
+            lineCount++;
+          } else {
+            line = test;
+          }
+        }
+        bubbleW = maxMetricsW + marginW;
+        bubbleH = lineCount * lineHeight;
+        console.log(bubbleW, bubbleH);
       }
 
       bubbleX = x - bubbleW/2 - yourW/2;
@@ -384,4 +412,4 @@ function HomeCompCtrl(Auth, GetDetails) {
 
 }
 
-HomeCompCtrl.$inject = ['Auth', 'GetDetails'];
+HomeCompCtrl.$inject = ['Auth', 'UserService'];
