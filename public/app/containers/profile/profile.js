@@ -5,7 +5,7 @@ angular.module('ChatApp')
   controllerAs: 'profileComp'
 });
 
-function ProfileCompCtrl(Auth, UserService, GetDetails) {
+function ProfileCompCtrl(Auth, UserService) {
   var profileComp = this;
   //console.log(Auth.currentUser().name);
   profileComp.username = Auth.currentUser().name;
@@ -16,7 +16,7 @@ function ProfileCompCtrl(Auth, UserService, GetDetails) {
     legsColor: 'blue'
   }
 
-  GetDetails.getColors().then(function success(res) {
+  UserService.getColors().then(function success(res) {
     profileComp.userSettings = res.data;
   },function error(res) {
     console.log(res);
@@ -39,4 +39,4 @@ function ProfileCompCtrl(Auth, UserService, GetDetails) {
 
 }
 
-ProfileCompCtrl.$inject = ['Auth', 'UserService', 'GetDetails'];
+ProfileCompCtrl.$inject = ['Auth', 'UserService'];

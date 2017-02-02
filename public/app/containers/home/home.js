@@ -5,7 +5,7 @@ angular.module('ChatApp')
   controllerAs: 'homeComp'
 });
 
-function HomeCompCtrl(Auth, GetDetails) {
+function HomeCompCtrl(Auth, UserService) {
   var homeComp = this;
 
   homeComp.userSettings = {
@@ -23,7 +23,7 @@ function HomeCompCtrl(Auth, GetDetails) {
   var socket = io();
   var yourColors;
 
-  GetDetails.getColors().then(function success(res) {
+  UserService.getColors().then(function success(res) {
     homeComp.userSettings = res.data;
     console.log(homeComp.userSettings);
     yourColors = {
@@ -389,4 +389,4 @@ function HomeCompCtrl(Auth, GetDetails) {
 
 }
 
-HomeCompCtrl.$inject = ['Auth', 'GetDetails'];
+HomeCompCtrl.$inject = ['Auth', 'UserService'];
