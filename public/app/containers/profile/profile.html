@@ -12,10 +12,11 @@
     </div>
 
     <div class="customizer">
-      <form id="colors">
+      <form id="colors" ng-submit="profileComp.changeAvatar()">
         <input class="colorPicker" id="topColor" minicolors ng-model="profileComp.userSettings.topColor"/>
         <input class="colorPicker" id="torsoColor" minicolors ng-model="profileComp.userSettings.torsoColor"/>
         <input class="colorPicker" id="legsColor" minicolors ng-model="profileComp.userSettings.legsColor"/>
+        <input type="submit" />
       </form>
     </div>
 
