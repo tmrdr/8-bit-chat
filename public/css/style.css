@@ -38,7 +38,6 @@
   background-color: black;
   text-align: center;
   margin: 0 auto;
-  margin-top: 50px;
 }
 
 .top {
@@ -64,7 +63,7 @@
 }
 
 .torso {
-  height: 120px;
+  height: 100px;
   width: 100px;
   background-color: red;
   text-align: center;
@@ -73,7 +72,7 @@
 }
 
 .legs {
-  height: 120px;
+  height: 100px;
   width: 100px;
   background-color: blue;
   text-align: center;
@@ -81,34 +80,26 @@
   margin-top: 0px;
 }
 
-#colors {
-  display: inline-block;
-  float: right;
-  margin-top: 35px;
-}
-
-#topColor {
-  margin-top: 70px;
-  display: inline-block;
-}
-
-#torsoColor {
-  margin-top: 100px;
-  display: inline-block;
-}
-
-#legsColor {
-  margin-top: 40px;
-  display: inline-block;
-}
-
-.minicolors-swatch {
-  margin-top: 100px;
-  margin-left: 0px;
+.avatarCustomizer {
+  margin: 50px auto;
+  display: flex;
+  justify-content: center;
 }
 
 .customizer {
-  height: 340px;
-  display: inline-block;
-  margin-left: 20px;
+  margin-left: 10px;
+  height: 300px;
+}
+
+#colors {
+  height: inherit;
+  display: flex;
+  margin-top: 35px;
+  flex-flow: column;
+  justify-content: space-around;
+}
+
+input {
+  height: 35px;
+  font-family: 'Silkscreen';
 }
