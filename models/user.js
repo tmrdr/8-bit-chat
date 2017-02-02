@@ -38,10 +38,10 @@ UserSchema.set('toJSON', {
     var returnJson = {
       id: ret._id,
       name: ret.name,
-      hair: ret.hair,
-      head: ret.head,
-      torso: ret.torso,
-      legs: ret.legs
+      hairColor: ret.hairColor,
+      topColor: ret.topColor,
+      torsoColor: ret.torsoColor,
+      legsColor: ret.legsColor
     };
     return returnJson;
   }
