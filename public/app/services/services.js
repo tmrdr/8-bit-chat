@@ -116,3 +116,28 @@ angular.module('ChatApp')
       }
     }
 }])
+.factory('GetDetails', ["$http",'Auth', function($http, Auth) {
+  console.log('getting');
+  var id = Auth.currentUser().id;
+  return {
+    getColors: function(id, params) {
+      var URL = '/api/users/' + Auth.currentUser().id;
+      var req = {
+        url: URL,
+        method: 'GET',
+        data: params
+      }
+      return $http(req).then(function success(res) {
+        if(res.status !== 200) {
+          console.log('didnt work', res.data.message);
+          return false;
+        }
+        console.log('User Gotten', res.data);
+        console.log(res);
+        return res.data;
+      }, function error(res) {
+        console.log('error response:', res);
+      });
+    }
+  }
+}])

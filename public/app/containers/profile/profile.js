@@ -5,7 +5,7 @@ angular.module('ChatApp')
   controllerAs: 'profileComp'
 });
 
-function ProfileCompCtrl(Auth, UpdateUser) {
+function ProfileCompCtrl(Auth, UpdateUser, GetDetails) {
   var profileComp = this;
   console.log(Auth.currentUser().name);
   profileComp.username = Auth.currentUser().name;
@@ -15,6 +15,9 @@ function ProfileCompCtrl(Auth, UpdateUser) {
     torsoColor: 'red',
     legsColor: 'blue'
   }
+
+  GetDetails.getColors();
+  console.log(profileComp.userSettings);
 
   profileComp.changeAvatar = function() {
     var params = {
@@ -31,4 +34,4 @@ function ProfileCompCtrl(Auth, UpdateUser) {
 
 }
 
-ProfileCompCtrl.$inject = ['Auth', 'UpdateUser'];
+ProfileCompCtrl.$inject = ['Auth', 'UpdateUser', 'GetDetails'];
