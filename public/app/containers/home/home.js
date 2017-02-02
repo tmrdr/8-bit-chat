@@ -16,11 +16,9 @@ function HomeCompCtrl() {
     // players[socketID] = { x: __, y: __, facing: __, msg: __, colors: { hair: "#FFFFFF", skin: "#D2691E", torso: "#FF0000", legs: "#0000FF" } }
     var players = {}; // list of all connected players and relevant data
     var yourId;
-    var bit = 5; // size of one "pixel"
+    var bit = 10; // size of one "pixel"
     var yourW = bit*4; // avatar width
     var yourH = yourW*3; // avatar height
-    // var spawnX = canvas.width/2 - yourW/2; // spawn point
-    // var spawnY = canvas.height/2 - yourH/2; // spawn point
     var spawnPosition = {
       x: canvas.width/2 - yourW/2,
       y: canvas.height/2 - yourH/2
@@ -262,23 +260,42 @@ function HomeCompCtrl() {
 
     }
 
-    function wrapText(text, x, y, maxWidth, lineHeight) { // DRAW TEXT
-      var words = text.split(' ');
-      var line = '';
+    function wrapText (text, x, y, maxWidth, lineHeight) {
+      var words = text.split(' '),
+          line = '',
+          lineCount = 0,
+          i,
+          test,
+          metrics;
 
-      for(var n = 0; n < words.length; n++) {
-        var testLine = line + words[n] + ' ';
-        var metrics = ctx.measureText(testLine);
-        var testWidth = metrics.width;
-        if (testWidth > maxWidth && n > 0) {
-          ctx.fillText(line, x, y);
-          line = words[n] + ' ';
-          y += lineHeight;
-        }
-        else {
-          line = testLine;
-        }
+      for (i = 0; i < words.length; i++) {
+          test = words[i];
+          metrics = ctx.measureText(test);
+          console.log(metrics);
+          while (metrics.width > maxWidth) {
+              // Determine how much of the word will fit
+              test = test.substring(0, test.length - 1);
+              metrics = ctx.measureText(test);
+          }
+          if (words[i] != test) {
+              words.splice(i + 1, 0,  words[i].substr(test.length))
+              words[i] = test;
+          }
+
+          test = line + words[i] + ' ';
+          metrics = ctx.measureText(test);
+
+          if (metrics.width > maxWidth && i > 0) {
+              ctx.fillText(line, x, y);
+              line = words[i] + ' ';
+              y += lineHeight;
+              lineCount++;
+          }
+          else {
+              line = test;
+          }
       }
+
       ctx.fillText(line, x, y);
     }
   };
