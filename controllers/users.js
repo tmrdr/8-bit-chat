@@ -24,6 +24,14 @@ router.route('/')
     });
   });
 
+  router.route('/:id')
+  .put(function(req,res) {
+    User.findByIdAndUpdate(req.params.id, req.body, function(err) {
+      if (err) return res.status(500).send(err);
+      res.send({'message': 'success'});
+    });
+  })
+
 // router.get('/:id', function(req, res) {
 //   User.findById(req.params.id, function(err, user) {
 //     if (err) return res.status(500).send(err);
