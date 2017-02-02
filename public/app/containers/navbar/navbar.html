@@ -16,7 +16,7 @@
       <li><a ui-sref="signup()" ng-hide="Auth.isLoggedIn()" class="redtext">Signup</a></li>
       <li><a ui-sref="login()" ng-hide="Auth.isLoggedIn()" class="redtext">Login</a></li>
       <li><a ui-sref="profile()" ng-show="Auth.isLoggedIn()" class="redtext">Profile</a></li>
-      <li><a ui-sref="logout()" ng-show="Auth.isLoggedIn()" class="redtext">Logout</a></li>
+      <li><a href ng-click="logout()" ng-show="Auth.isLoggedIn()" class="redtext">Logout</a></li>
     </ul>
   </div><!-- /.navbar-collapse -->
 </nav>
