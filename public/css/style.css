@@ -102,4 +102,17 @@
 input {
   height: 35px;
   font-family: 'Silkscreen';
+  border: 1px solid black;
+}
+
+.button {
+  color: black;
+  border: 2px solid black;
+  background-color: white;
+}
+
+.button:hover {
+  color: white;
+  border: 2px solid white;
+  background-color: black;
 }
