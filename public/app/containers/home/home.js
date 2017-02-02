@@ -5,11 +5,12 @@ angular.module('ChatApp')
   controllerAs: 'homeComp'
 });
 
-function HomeCompCtrl() {
+function HomeCompCtrl(Auth) {
+  var homeComp = this;
   var socket = io();
   console.log("home.js online");
 
-  this.$onInit = function () {
+  homeComp.$onInit = function () {
 /* ---------------------------- CHAT FUNCTIONALITY -------------------------- */
   /* ---------------------------------------------- SOME INITIALIZATION STUFF */
     var ctx = $('#canvas')[0].getContext("2d");
@@ -17,6 +18,8 @@ function HomeCompCtrl() {
     var players = {}; // list of all connected players and relevant data
     var yourId;
     var bit = 5; // size of one "pixel"
+    var fontSize = bit*3;
+    var messageTimeout;
     var yourW = bit*4; // avatar width
     var yourH = yourW*3; // avatar height
     var spawnPosition = {
@@ -134,13 +137,14 @@ function HomeCompCtrl() {
         event.preventDefault();
         arrowKeyDown(event.keyCode);
         emitYourMovement();
-        console.log(players)
+        // console.log(players)
         redrawCanvas();
       }
     });
 
     $('#chat-form').on('submit', function(event){
       event.preventDefault();
+      clearTimeout(messageTimeout);
 
       var message = event.target.chat.value;
       socket.emit('chat message', {
@@ -151,7 +155,7 @@ function HomeCompCtrl() {
       event.target.chat.value = ''; // clear message from text input
 
       // clear message from canvas after a timeout
-      setTimeout(function() {
+      messageTimeout = setTimeout(function() {
         socket.emit('chat message', {
           id: yourId,
           msg: ''
@@ -226,8 +230,8 @@ function HomeCompCtrl() {
         });
 
         ctx.fillStyle = "red";
-        ctx.font = "20px Silkscreen";
-        ctx.fillText("x: " + players[yourId].pos.x + " y: " + players[yourId].pos.y ,10,50);
+        // ctx.font = "10px Silkscreen";
+        // ctx.fillText("x: " + players[yourId].pos.x + " y: " + players[yourId].pos.y ,10,50);
       }
     }
 
@@ -263,20 +267,58 @@ function HomeCompCtrl() {
       }
 
       if (msg !== "" && msg !== undefined) { // if message is not empty
-        wrapText(msg, x+w, y, 200, 15); // also render message
+        // wrapText(msg, x+w, y, 100, fontSize); // render message
+        speechBubble(msg, x+w, y, 100, fontSize);
       }
 
     }
 
-    function wrapText (text, x, y, maxWidth, lineHeight) {
+    function speechBubble(text, x, y, maxWidth, lineHeight) {
+      ctx.font = fontSize + "px Silkscreen";
       var words = text.split(' '),
           line = '',
           lineCount = 0,
-          i,
           test,
           metrics;
 
-      for (i = 0; i < words.length; i++) {
+      var bubbleW,
+          bubbleH,
+          marginW = 2*bit,
+          marginH = 1.4;
+      var bubbleX, bubbleY;
+
+      metrics = ctx.measureText(text);
+      if (metrics.width >= maxWidth) {
+        bubbleW = maxWidth + marginW; // account for bubble margins
+        bubbleH = lineHeight * (Math.floor(metrics.width/maxWidth) + marginH);
+      } else {
+        bubbleW = metrics.width + marginW;
+        bubbleH = lineHeight * marginH;
+      }
+
+      bubbleX = x - bubbleW/2 - yourW/2;
+      bubbleY = y - bubbleH - bit;
+
+      ctx.fillStyle = "white";
+      rect(bubbleX, bubbleY, bubbleW, bubbleH);
+      ctx.fillStyle = "#000000";
+      ctx.strokeRect(bubbleX, bubbleY, bubbleW, bubbleH);
+      ctx.fillStyle = "#000000";
+      wrapText(text, bubbleX+bit, bubbleY+fontSize, maxWidth, fontSize);
+    }
+
+    function wrapText(text, x, y, maxWidth, lineHeight) {
+      ctx.font = fontSize + "px Silkscreen";
+      var words = text.split(' '),
+          line = '',
+          lineCount = 0,
+          test,
+          metrics;
+
+      metrics = ctx.measureText(text);
+      // console.log("preliminary measuring:", metrics);
+
+      for (var i = 0; i < words.length; i++) {
           test = words[i];
           metrics = ctx.measureText(test);
           // console.log(metrics);
@@ -303,16 +345,15 @@ function HomeCompCtrl() {
               line = test;
           }
       }
-
       ctx.fillText(line, x, y);
     }
   };
 
-  this.$onDestroy = function () {
+  homeComp.$onDestroy = function () {
     $("#chat-container").empty();
     socket.disconnect();
   };
 
 }
 
-HomeCompCtrl.$inject = [];
+HomeCompCtrl.$inject = ['Auth'];
