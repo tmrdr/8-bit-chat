@@ -1,24 +1,32 @@
 <div class="container">
-    <h1 class="redtext">your profile</h1>
-    <h2 class="redtext">{{profileComp.username}}</h2>
-    <div class="person">
-        <div class="hair" ng-style="{'background-color': profileComp.userSettings.hairColor}"></div>
-        <div class="top" ng-style="{'background-color': profileComp.userSettings.topColor}">
-            <div id="left" class="eyes"></div>
-            <div id="right" class="eyes"></div>
-        </div>
-        <div class="torso" ng-style="{'background-color': profileComp.userSettings.torsoColor}"></div>
-        <div class="legs" ng-style="{'background-color': profileComp.userSettings.legsColor}"></div>
-    </div>
+  <h1 class="redtext">your profile</h1>
+  <h2 class="redtext">{{profileComp.username}}</h2>
+  <div class="person">
+      <div class="hair" ng-style="{'background-color': profileComp.userSettings.hairColor}"></div>
+      <div class="top" ng-style="{'background-color': profileComp.userSettings.topColor}">
+          <div id="left" class="eyes"></div>
+          <div id="right" class="eyes"></div>
+      </div>
+      <div class="torso" ng-style="{'background-color': profileComp.userSettings.torsoColor}"></div>
+      <div class="legs" ng-style="{'background-color': profileComp.userSettings.legsColor}"></div>
+  </div>
 
-    <div class="customizer">
-      <form id="colors" ng-submit="profileComp.changeAvatar()">
-        <input class="colorPicker" id="topColor" minicolors ng-model="profileComp.userSettings.topColor"/>
-        <input class="colorPicker" id="torsoColor" minicolors ng-model="profileComp.userSettings.torsoColor"/>
-        <input class="colorPicker" id="legsColor" minicolors ng-model="profileComp.userSettings.legsColor"/>
-        <input type="submit" />
-      </form>
+  <div class="customizer">
+    <form id="colors" ng-submit="profileComp.changeAvatar()">
+      <input class="colorPicker" id="topColor" minicolors ng-model="profileComp.userSettings.topColor"/>
+      <input class="colorPicker" id="torsoColor" minicolors ng-model="profileComp.userSettings.torsoColor"/>
+      <input class="colorPicker" id="legsColor" minicolors ng-model="profileComp.userSettings.legsColor"/>
+      <input type="submit" />
+    </form>
+  </div>
+  <div id="delete-container">
+    <div>
+      <h3 class="redtext">
+        Are you sure you want to delete your account?
+      </h3>
+      <button class="btn btn-danger">Yes, I'm sure.</button>
     </div>
-
+    <button class="btn btn-danger">Delete Account</button>
+  </div>
 
 </div>
