@@ -5,10 +5,28 @@ angular.module('ChatApp')
   controllerAs: 'homeComp'
 });
 
-function HomeCompCtrl(Auth) {
+function HomeCompCtrl(Auth, GetDetails) {
   var homeComp = this;
+
+  homeComp.username = Auth.currentUser().name;
+  console.log('homeComp.username', homeComp.username);
+  homeComp.userSettings = {
+    hairColor: 'black',
+    topColor: 'chocolate',
+    torsoColor: 'red',
+    legsColor: 'blue'
+  }
+  console.log('homeComp.userSettings', homeComp.userSettings);
+
+  GetDetails.getColors().then(function success(res) {
+    console.log(res.data);
+    homeComp.userSettings = res.data;
+    homeComp.$onInit();
+  },function error(res) {
+    console.log(res);
+  });
+
   var socket = io();
-  console.log("home.js online");
 
   homeComp.$onInit = function () {
 /* ---------------------------- CHAT FUNCTIONALITY -------------------------- */
@@ -27,12 +45,13 @@ function HomeCompCtrl(Auth) {
       y: canvas.height/2 - yourH/2
     }
     var spawnFacing = 40;
-    var placeholderColors = {
-      hair: "#000000",
-      skin: "#D2691E",
-      torso: "#FF0000",
-      legs: "#0000FF"
-    };
+    var yourColors = {
+      hair: homeComp.userSettings.hairColor,
+      skin: homeComp.userSettings.topColor,
+      torso: homeComp.userSettings.torsoColor,
+      legs: homeComp.userSettings.legsColor
+    }
+    console.log('yourColors:', yourColors);
     var yourGait = bit; // player data increment
 
   /* ---------------------------------------------- SOCKET.IO EVENT LISTENERS */
@@ -40,7 +59,7 @@ function HomeCompCtrl(Auth) {
       console.log('connected to socket', socket);
       // in the client list, the first two characters of socket IDs are cut off
       yourId = socket.id.substring(2, socket.id.length);
-      addPlayer(yourId, spawnPosition, spawnFacing, "", placeholderColors)
+      addPlayer(yourId, spawnPosition, spawnFacing, "", yourColors)
 
       socket.emit('newPlayer', {
         id: yourId,
@@ -50,7 +69,7 @@ function HomeCompCtrl(Auth) {
         },
         facing: spawnFacing,
         msg: "",
-        colors: placeholderColors
+        colors: yourColors
       });
       // make sure emit parameters corresponds with the way back-end socket.io sets it up
 
@@ -63,7 +82,7 @@ function HomeCompCtrl(Auth) {
       for (var i=0; i<playerList.length; i++) {
         var id = playerList[i].substring(2, playerList[i].length);
         if (id !== socket.id) {
-          addPlayer(id, spawnPosition, spawnFacing, "", placeholderColors);
+          addPlayer(id, spawnPosition, spawnFacing, "", yourColors);
         }
       }
       // console.log("givePlayersList:", players);
@@ -356,4 +375,4 @@ function HomeCompCtrl(Auth) {
 
 }
 
-HomeCompCtrl.$inject = ['Auth'];
+HomeCompCtrl.$inject = ['Auth', 'GetDetails'];
