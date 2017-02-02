@@ -220,7 +220,7 @@ function HomeCompCtrl() {
         // console.log(players);
         ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
         var playerRenderOrder = []; // avatars are to be layered according to their y coordinate
-        playerRenderOrder = Object.keys(players).sort(function(a,b){return players[a].y-players[b].y});
+        playerRenderOrder = Object.keys(players).sort(function(a,b){return players[a].pos.y-players[b].pos.y});
         playerRenderOrder.forEach(function(id) {
           avatar(players[id].pos.x, players[id].pos.y, yourW, players[id].facing, players[id].msg, players[id].colors);
         });
