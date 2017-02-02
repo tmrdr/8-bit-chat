@@ -7,7 +7,7 @@ angular.module('ChatApp')
 
 function ProfileCompCtrl(Auth, UpdateUser, GetDetails) {
   var profileComp = this;
-  console.log(Auth.currentUser().name);
+  //console.log(Auth.currentUser().name);
   profileComp.username = Auth.currentUser().name;
   profileComp.userSettings = {
     hairColor: 'black',
@@ -16,8 +16,13 @@ function ProfileCompCtrl(Auth, UpdateUser, GetDetails) {
     legsColor: 'blue'
   }
 
-  GetDetails.getColors();
-  console.log(profileComp.userSettings);
+  GetDetails.getColors().then(function success(res) {
+    profileComp.userSettings = res.data;
+  },function error(res) {
+    console.log(res);
+  });
+
+  //console.log(profileComp.userSettings);
 
   profileComp.changeAvatar = function() {
     var params = {
