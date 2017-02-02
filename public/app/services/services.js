@@ -93,16 +93,26 @@ angular.module('ChatApp')
     }
   }
 }])
-  .factory('UpdateUser', ['Auth', function(Auth) {
+  .factory('UpdateUser', ["$http",'Auth', function($http, Auth) {
     console.log('updating');
     return {
-      updateColors: function(params) {
-        var URL = '/api/users';
+      updateColors: function(id, params) {
+        var URL = '/api/users/' + id;
         var req = {
           url: URL,
           method: 'PUT',
           data: params
         }
+        return $http(req).then(function success(res) {
+          if(res.status !== 200) {
+            console.log('didnt work', res.data.message);
+            return false;
+          }
+          console.log('User Updated', res.data);
+          return res.data;
+        }, function error(res) {
+          console.log('error response:', res);
+        });
       }
     }
 }])

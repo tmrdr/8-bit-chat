@@ -24,7 +24,9 @@ function ProfileCompCtrl(Auth, UpdateUser) {
       legsColor: profileComp.userSettings.legsColor
     }
     console.log(params);
-    UpdateUser.updateColors(params);
+    console.log("user:", Auth.currentUser());
+    var id = Auth.currentUser().id;
+    UpdateUser.updateColors(id, params);
   }
 
 }

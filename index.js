@@ -30,7 +30,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // AUTH HERE
-// app.use('/api/recipes', expressJWT({secret: secret}), require('./controllers/recipes'));
+app.use('/users', require('./controllers/users'));
 
 app.use('/api/users', expressJWT({secret: secret}).unless({
   path: [{ url: '/api/users', methods: ['POST'] }]
