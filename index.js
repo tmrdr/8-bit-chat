@@ -102,8 +102,8 @@ io.on('connection', function(socket){
   })
 
   socket.on('movement', function(playerData) {
-    // console.log('player state:', playerData)
-    socket.broadcast.emit('player state', {
+    // console.log('player moved:', playerData)
+    socket.broadcast.emit('movement', {
       id: playerData.id,
       pos: playerData.pos,
       facing: playerData.facing

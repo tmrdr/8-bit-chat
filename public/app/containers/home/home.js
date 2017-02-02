@@ -86,6 +86,11 @@ function HomeCompCtrl() {
       redrawCanvas();
     });
 
+    socket.on('movement', function(data) {
+      updatePlayer(data.id, data.pos, data.facing);
+      redrawCanvas();
+    })
+
     socket.on('chat message', function(data) {
       // console.log("chat data:", data);
       players[data.id].msg = data.msg;
@@ -129,6 +134,7 @@ function HomeCompCtrl() {
         event.preventDefault();
         arrowKeyDown(event.keyCode);
         emitYourMovement();
+        console.log(players)
         redrawCanvas();
       }
     });
@@ -174,7 +180,9 @@ function HomeCompCtrl() {
         players[id].pos.x = pos.x;
         players[id].pos.y = pos.y;
         players[id].facing = facing;
-        players[id].msg = msg;
+        if(msg) {
+          players[id].msg = msg;
+        }
       }
     }
 
@@ -271,7 +279,7 @@ function HomeCompCtrl() {
       for (i = 0; i < words.length; i++) {
           test = words[i];
           metrics = ctx.measureText(test);
-          console.log(metrics);
+          // console.log(metrics);
           while (metrics.width > maxWidth) {
               // Determine how much of the word will fit
               test = test.substring(0, test.length - 1);
