@@ -7,7 +7,7 @@ angular.module('ChatApp')
 
 function ProfileCompCtrl(Auth, UserService) {
   var profileComp = this;
-  //console.log(Auth.currentUser().name);
+  var deleteConfirm = false;
   profileComp.username = Auth.currentUser().name;
   profileComp.userSettings = {
     hairColor: 'black',
@@ -22,8 +22,6 @@ function ProfileCompCtrl(Auth, UserService) {
     console.log(res);
   });
 
-  //console.log(profileComp.userSettings);
-
   profileComp.changeAvatar = function() {
     var params = {
       hairColor: profileComp.userSettings.hairColor || 'black',
@@ -35,6 +33,14 @@ function ProfileCompCtrl(Auth, UserService) {
     console.log("user:", Auth.currentUser());
     var id = Auth.currentUser().id;
     UserService.updateColors(id, params);
+  }
+
+  profileComp.deleteAccount = function() {
+    profileComp.deleteConfirm = false;
+  }
+
+  profileComp.confirmNo = function() {
+    profileComp.deleteConfirm = true;
   }
 
 }

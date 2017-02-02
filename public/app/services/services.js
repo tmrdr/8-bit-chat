@@ -57,6 +57,14 @@ angular.module('ChatApp')
         url: URL,
         method: 'GET'
       }
+      return $http(req);
+    },
+    deleteUser: function() {
+      var URL = '/api/users/' + Auth.currentUser().id;
+      var req = {
+        url: URL,
+        method: 'DELETE'
+      }
 
       return $http(req);
     }
