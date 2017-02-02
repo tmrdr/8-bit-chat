@@ -95,12 +95,12 @@ angular.module('ChatApp')
 }])
   .factory('UpdateUser', ['Auth', function(Auth) {
     console.log('updating');
-    return {    
+    return {
       updateColors: function(params) {
         var URL = '/api/users';
         var req = {
           url: URL,
-          method: 'POST',
+          method: 'PUT',
           data: params
         }
       }
