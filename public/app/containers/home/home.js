@@ -345,7 +345,6 @@ function HomeCompCtrl(Auth, UserService) {
           }
         }
         lineCount++;
-        console.log(lineCount)
         bubbleW = maxMetricsW + marginW;
         bubbleH = lineCount * lineHeight + marginH;
       }
