@@ -18,10 +18,10 @@ function ProfileCompCtrl(Auth, UpdateUser) {
 
   profileComp.changeAvatar = function() {
     var params = {
-      hairColor: profileComp.userSettings.hairColor,
-      topColor: profileComp.userSettings.topColor,
-      torsoColor: profileComp.userSettings.torsoColor,
-      legsColor: profileComp.userSettings.legsColor
+      hairColor: profileComp.userSettings.hairColor || 'black',
+      topColor: profileComp.userSettings.topColor || 'chocolate',
+      torsoColor: profileComp.userSettings.torsoColor || 'red',
+      legsColor: profileComp.userSettings.legsColor || 'blue'
     }
     console.log(params);
     console.log("user:", Auth.currentUser());
