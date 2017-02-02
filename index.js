@@ -70,7 +70,7 @@ app.get('/*', function(req, res){
 
 // socket
 io.on('connection', function(socket){
-  // console.log('user connected:', socket.client.id);
+  console.log('user connected:', socket.client.id);
   socket.on('newPlayer', function(newPlayerData) {
     console.log("new player:", newPlayerData);
     socket.broadcast.emit('newPlayer', {
@@ -91,7 +91,7 @@ io.on('connection', function(socket){
   });
 
   socket.on('player data', function(playerData) {
-    // console.log('player state:', playerData)
+    // console.log('player state:', playerData);
     socket.broadcast.emit('player data', {
       id: playerData.id,
       pos: playerData.pos,
@@ -102,8 +102,8 @@ io.on('connection', function(socket){
   })
 
   socket.on('movement', function(playerData) {
-    // console.log('player state:', playerData)
-    socket.broadcast.emit('player state', {
+    // console.log('movement:', playerData)
+    socket.broadcast.emit('movement', {
       id: playerData.id,
       pos: playerData.pos,
       facing: playerData.facing

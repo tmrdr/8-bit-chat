@@ -8,25 +8,34 @@ angular.module('ChatApp')
 function HomeCompCtrl(Auth, GetDetails) {
   var homeComp = this;
 
-  homeComp.username = Auth.currentUser().name;
-  console.log('homeComp.username', homeComp.username);
   homeComp.userSettings = {
     hairColor: 'black',
     topColor: 'chocolate',
     torsoColor: 'red',
     legsColor: 'blue'
   }
+
   console.log('homeComp.userSettings', homeComp.userSettings);
 
-  GetDetails.getColors().then(function success(res) {
-    console.log(res.data);
-    homeComp.userSettings = res.data;
-    homeComp.$onInit();
-  },function error(res) {
-    console.log(res);
-  });
+  // homeComp.userid = Auth.currentUser().id;
+  // homeComp.username = Auth.currentUser().name;
 
   var socket = io();
+  var yourColors;
+
+  GetDetails.getColors().then(function success(res) {
+    homeComp.userSettings = res.data;
+    console.log(homeComp.userSettings);
+    yourColors = {
+      hair: homeComp.userSettings.hairColor,
+      skin: homeComp.userSettings.topColor,
+      torso: homeComp.userSettings.torsoColor,
+      legs: homeComp.userSettings.legsColor
+    }
+    // homeComp.$onInit();
+  }, function error(res) {
+    console.log(res);
+  });
 
   homeComp.$onInit = function () {
 /* ---------------------------- CHAT FUNCTIONALITY -------------------------- */
@@ -45,12 +54,12 @@ function HomeCompCtrl(Auth, GetDetails) {
       y: canvas.height/2 - yourH/2
     }
     var spawnFacing = 40;
-    var yourColors = {
-      hair: homeComp.userSettings.hairColor,
-      skin: homeComp.userSettings.topColor,
-      torso: homeComp.userSettings.torsoColor,
-      legs: homeComp.userSettings.legsColor
-    }
+    // var yourColors = {
+    //   hair: homeComp.userSettings.hairColor,
+    //   skin: homeComp.userSettings.topColor,
+    //   torso: homeComp.userSettings.torsoColor,
+    //   legs: homeComp.userSettings.legsColor
+    // }
     console.log('yourColors:', yourColors);
     var yourGait = bit; // player data increment
 
@@ -59,7 +68,7 @@ function HomeCompCtrl(Auth, GetDetails) {
       console.log('connected to socket', socket);
       // in the client list, the first two characters of socket IDs are cut off
       yourId = socket.id.substring(2, socket.id.length);
-      addPlayer(yourId, spawnPosition, spawnFacing, "", yourColors)
+      addPlayer(yourId, spawnPosition, spawnFacing, "", yourColors);
 
       socket.emit('newPlayer', {
         id: yourId,
@@ -71,6 +80,7 @@ function HomeCompCtrl(Auth, GetDetails) {
         msg: "",
         colors: yourColors
       });
+
       // make sure emit parameters corresponds with the way back-end socket.io sets it up
 
       socket.emit('readyForPlayers');
@@ -99,16 +109,17 @@ function HomeCompCtrl(Auth, GetDetails) {
     });
 
     socket.on('player data', function(data) {
-      // .log('player data event:', data);
+      // console.log('player data event:', data);
       if (!players[data.id]) { // if the player isn't on your player list, add them
         addPlayer(data.id, data.pos, data.facing, data.msg, data.colors);
       } else { // if they are on your player list, update their state
-        updatePlayer(data.id, data.pos, data.facing, data.msg);
+        updatePlayer(data.id, data.pos, data.facing, data.msg, data.colors);
       }
       redrawCanvas();
     });
 
     socket.on('movement', function(data) {
+      console.log(data);
       updatePlayer(data.id, data.pos, data.facing);
       redrawCanvas();
     })
@@ -198,13 +209,16 @@ function HomeCompCtrl(Auth, GetDetails) {
       }
     }
 
-    function updatePlayer(id, pos, facing, msg) {
+    function updatePlayer(id, pos, facing, msg, colors) {
       if (players[id]) {
         players[id].pos.x = pos.x;
         players[id].pos.y = pos.y;
         players[id].facing = facing;
         if(msg) {
           players[id].msg = msg;
+        }
+        if(colors) {
+          players[id].colors = colors;
         }
       }
     }
@@ -242,9 +256,9 @@ function HomeCompCtrl(Auth, GetDetails) {
       if($('#canvas')[0]) { // run only if the canvas element exists
         // console.log(players);
         ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
-        var playerRenderOrder = []; // avatars are to be layered according to their y coordinate
-        playerRenderOrder = Object.keys(players).sort(function(a,b){return players[a].pos.y-players[b].pos.y});
-        playerRenderOrder.forEach(function(id) {
+        var assetRenderOrder = []; // avatars are to be layered according to their y coordinate
+        assetRenderOrder = Object.keys(players).sort(function(a,b){return players[a].pos.y-players[b].pos.y});
+        assetRenderOrder.forEach(function(id) {
           avatar(players[id].pos.x, players[id].pos.y, yourW, players[id].facing, players[id].msg, players[id].colors);
         });
 
