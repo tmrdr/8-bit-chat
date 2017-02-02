@@ -8,34 +8,29 @@ angular.module('ChatApp')
 function HomeCompCtrl(Auth, GetDetails) {
   var homeComp = this;
 
-  homeComp.userSettings = {
-    hairColor: 'black',
-    topColor: 'chocolate',
-    torsoColor: 'red',
-    legsColor: 'blue'
-  }
-
-  console.log('homeComp.userSettings', homeComp.userSettings);
-
-  // homeComp.userid = Auth.currentUser().id;
-  // homeComp.username = Auth.currentUser().name;
-
   var socket = io();
-  var yourColors;
+  var yourColors = { // default colors
+    hair: 'black',
+    skin: 'chocolate',
+    torso: 'red',
+    legs: 'blue'
+  };
 
-  GetDetails.getColors().then(function success(res) {
-    homeComp.userSettings = res.data;
-    console.log(homeComp.userSettings);
-    yourColors = {
-      hair: homeComp.userSettings.hairColor,
-      skin: homeComp.userSettings.topColor,
-      torso: homeComp.userSettings.torsoColor,
-      legs: homeComp.userSettings.legsColor
-    }
-    // homeComp.$onInit();
-  }, function error(res) {
-    console.log(res);
-  });
+  if(Auth.currentUser()) { // if a user is signed in
+    GetDetails.getColors().then(function success(res) {
+      homeComp.userSettings = res.data;
+      console.log(homeComp.userSettings);
+      yourColors = { // then retrieve their colors
+        hair: homeComp.userSettings.hairColor,
+        skin: homeComp.userSettings.topColor,
+        torso: homeComp.userSettings.torsoColor,
+        legs: homeComp.userSettings.legsColor
+      }
+      // homeComp.$onInit();
+    }, function error(res) {
+      console.log(res);
+    });
+  }
 
   homeComp.$onInit = function () {
 /* ---------------------------- CHAT FUNCTIONALITY -------------------------- */
