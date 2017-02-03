@@ -7,6 +7,9 @@
   </form>
   <div id="messages" class="hidden"></div>
 
-  <script src="/socket.io/socket.io.js"></script>
+  <div ng-if="!homeComp.IsLoggedIn">
+    <p>Press the arrow keys! Login to chat!</p>
+  </div>
 
+  <script src="/socket.io/socket.io.js"></script>
 </div>

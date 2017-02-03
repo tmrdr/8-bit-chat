@@ -15,6 +15,15 @@
     <ul class="nav navbar-nav navbar-right">
       <li><a ui-sref="signup()" ng-hide="Auth.isLoggedIn()" class="redtext">Signup</a></li>
       <li><a ui-sref="login()" ng-hide="Auth.isLoggedIn()" class="redtext">Login</a></li>
+      <li>
+        <a ui-sref="profile()" ng-show="Auth.isLoggedIn()" class="redtext">
+          <div id="bit-face" ng-style="{'background-color': userSettings.topColor}">
+            <div id="bit-hair" ng-style="{'background-color': userSettings.hairColor}"></div>
+            <div id="bit-eye-left" class="bit-eye"></div>
+            <div id="bit-eye-right" class="bit-eye"></div>
+          </div>
+        </a>
+      </li>
       <li><a ui-sref="profile()" ng-show="Auth.isLoggedIn()" class="redtext">Profile</a></li>
       <li><a href ng-click="logout()" ng-show="Auth.isLoggedIn()" class="redtext">Logout</a></li>
     </ul>
