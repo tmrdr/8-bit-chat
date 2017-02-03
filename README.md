@@ -7,7 +7,7 @@ This is a virtual chat room site styled a la 8-bit aesthetics that came out of t
 reasons.
 
 ## Technologies used
-The site is built with the front-end framework angularjs and database program mongoDB. Chat functionality is built with canvas and socket.io. Color picker from [jQuery Minicolors](kaihenzler.github.io/angular-minicolors/)
+The site is built with the front-end framework angularjs and database program mongoDB. Chat functionality is built with canvas and socket.io. Color picker from [jQuery Minicolors](https://kaihenzler.github.io/angular-minicolors/)
 
 ## General approach
 derp.
