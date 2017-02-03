@@ -8,6 +8,8 @@ angular.module('ChatApp')
 function HomeCompCtrl(Auth, UserService) {
   var homeComp = this;
 
+  homeComp.IsLoggedIn = Auth.currentUser();
+
   var socket = io();
 
   var yourColors = { // default colors
@@ -345,7 +347,6 @@ function HomeCompCtrl(Auth, UserService) {
           }
         }
         lineCount++;
-        console.log(lineCount)
         bubbleW = maxMetricsW + marginW;
         bubbleH = lineCount * lineHeight + marginH;
       }
