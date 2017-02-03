@@ -308,17 +308,16 @@ function HomeCompCtrl(Auth, UserService) {
           test,
           metrics;
 
-      var bubbleW,
-          bubbleH,
-          marginW = 2*bit,
-          marginH = 1.4;
-      var bubbleX, bubbleY;
+      var bubbleW, bubbleH, bubbleX, bubbleY;
+      var marginW = 2*bit,
+          marginH = bit;
       var maxMetricsW = 0;
 
       metrics = ctx.measureText(text);
+
       if (metrics.width <= maxWidth) {
         bubbleW = metrics.width + marginW;
-        bubbleH = lineHeight * marginH;
+        bubbleH = lineHeight + marginH;
       } else {
         for (var i = 0; i < words.length; i++) {
           test = words[i];
@@ -332,24 +331,23 @@ function HomeCompCtrl(Auth, UserService) {
             words.splice(i + 1, 0,  words[i].substr(test.length))
             words[i] = test;
           }
-
-          test = line + words[i] + ' ';
-          metrics = ctx.measureText(test);
           if (metrics.width > maxMetricsW) {
             maxMetricsW = metrics.width;
           }
+          test = line + words[i] + ' ';
+          metrics = ctx.measureText(test);
 
           if (metrics.width > maxWidth && i > 0) {
             line = words[i] + ' ';
-            y += lineHeight;
             lineCount++;
           } else {
             line = test;
           }
         }
+        lineCount++;
+        console.log(lineCount)
         bubbleW = maxMetricsW + marginW;
-        bubbleH = lineCount * lineHeight;
-        console.log(bubbleW, bubbleH);
+        bubbleH = lineCount * lineHeight + marginH;
       }
 
       bubbleX = x - bubbleW/2 - yourW/2;
@@ -359,7 +357,6 @@ function HomeCompCtrl(Auth, UserService) {
       rect(bubbleX, bubbleY, bubbleW, bubbleH);
       ctx.fillStyle = "#000000";
       ctx.strokeRect(bubbleX, bubbleY, bubbleW, bubbleH);
-      ctx.fillStyle = "#000000";
       wrapText(text, bubbleX+bit, bubbleY+fontSize, maxWidth, fontSize);
     }
 
@@ -370,9 +367,6 @@ function HomeCompCtrl(Auth, UserService) {
           lineCount = 0,
           test,
           metrics;
-
-      metrics = ctx.measureText(text);
-      // console.log("preliminary measuring:", metrics);
 
       for (var i = 0; i < words.length; i++) {
           test = words[i];
