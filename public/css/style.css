@@ -28,6 +28,10 @@ footer {
   margin: 10px;
 }
 
+#chat-form input[type="text"] {
+  padding: 7px;
+}
+
 #bit-face {
   width: 20px;
   height: 20px;
