@@ -340,8 +340,12 @@ function HomeCompCtrl(Auth, UserService) {
             }
             line = test;
           }
-
         }
+        metrics = ctx.measureText(line);
+        if (metrics.width > maxMetricsW) {
+          maxMetricsW = metrics.width;
+        }
+
         lineCount++;
         bubbleW = maxMetricsW + marginW;
         bubbleH = lineCount * lineHeight + marginH;
