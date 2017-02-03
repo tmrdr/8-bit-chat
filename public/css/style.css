@@ -6,6 +6,7 @@
 }
 html,
 body {
+  background-color: #DDDDDD;
   height: 100%;
   font-family: 'Silkscreen', monospace;
 }
