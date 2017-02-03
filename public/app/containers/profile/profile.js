@@ -30,8 +30,7 @@ function ProfileCompCtrl($state, Auth, UserService, Alerts) {
       torsoColor: profileComp.userSettings.torsoColor || 'red',
       legsColor: profileComp.userSettings.legsColor || 'blue'
     }
-    console.log(params);
-    console.log("user:", Auth.currentUser());
+
     var id = Auth.currentUser().id;
     UserService.updateColors(id, params);
   }
