@@ -4,14 +4,24 @@
   url('slkscr.ttf') format('truetype');
   /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
 }
-
+html,
 body {
+  height: 100%;
   font-family: 'Silkscreen', monospace;
 }
 
 footer {
-  margin: 5px;
+  margin: 20px;
   height: 20px;
+}
+
+.user-form {
+  margin: 50px auto 70px;
+  width: 400px;
+}
+
+.navbar {
+  border-radius: 0;
 }
 
 #chat-form {
