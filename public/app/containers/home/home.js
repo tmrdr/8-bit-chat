@@ -304,6 +304,7 @@ function HomeCompCtrl(Auth, UserService) {
 
     function speechBubble(text, x, y, maxWidth, lineHeight) {
       ctx.font = fontSize + "px Silkscreen";
+      text = text.trim();
       var words = text.split(' '),
           line = '',
           lineCount = 0,
@@ -313,9 +314,7 @@ function HomeCompCtrl(Auth, UserService) {
       var bubbleW, bubbleH, bubbleX, bubbleY;
       var marginW = 2*bit,
           marginH = bit;
-      var maxMetricsW = 0;
-
-      metrics = ctx.measureText(text);
+      var maxMetricsW = ctx.measureText(words[0]).width;
 
         for (var i = 0; i < words.length; i++) {
           test = words[i];
@@ -329,9 +328,6 @@ function HomeCompCtrl(Auth, UserService) {
             words.splice(i + 1, 0,  words[i].substr(test.length))
             words[i] = test;
           }
-          if (metrics.width > maxMetricsW) {
-            maxMetricsW = metrics.width;
-          }
           test = line + words[i] + ' ';
           metrics = ctx.measureText(test);
 
@@ -339,13 +335,16 @@ function HomeCompCtrl(Auth, UserService) {
             line = words[i] + ' ';
             lineCount++;
           } else {
+            if (metrics.width > maxMetricsW) {
+              maxMetricsW = metrics.width;
+            }
             line = test;
           }
+
         }
         lineCount++;
         bubbleW = maxMetricsW + marginW;
         bubbleH = lineCount * lineHeight + marginH;
-
 
       bubbleX = x - bubbleW/2 - yourW/2;
       bubbleY = y - bubbleH - bit;
