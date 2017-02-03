@@ -102,10 +102,11 @@ angular.module('ChatApp')
   var alerts = [];
 
   return {
-    clear: function() {
-      alerts = [];
-    },
+    // clear: function() {
+    //   alerts = [];
+    // },
     add: function(type, msg) {
+      alerts = [];
       alerts.push({type: type, msg: msg});
     },
     get: function() {
