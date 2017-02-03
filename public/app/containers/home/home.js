@@ -132,7 +132,7 @@ function HomeCompCtrl(Auth, UserService) {
 
       redrawCanvas();
     });
-    
+
     socket.on('slash command', function(data) {
       players[data.id].msg = data.msg;
       if (data.command === "pee") {
@@ -274,16 +274,16 @@ function HomeCompCtrl(Auth, UserService) {
       if($('#canvas')[0]) { // run only if the canvas element exists
         // console.log(players);
         ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
-        
+
         // draw assets under everything else.
         assets.forEach(drawAsset);
-        
+
         var assetRenderOrder = []; // avatars are to be layered according to their y coordinate
         assetRenderOrder = Object.keys(players).sort(function(a,b){return players[a].pos.y-players[b].pos.y});
         assetRenderOrder.forEach(function(id) {
           avatar(players[id].pos.x, players[id].pos.y, yourW, players[id].facing, players[id].msg, players[id].colors);
         });
-        
+
 
         ctx.fillStyle = "red";
         // ctx.font = "10px Silkscreen";
@@ -309,12 +309,12 @@ function HomeCompCtrl(Auth, UserService) {
           asset.loaded = true;
           ctx.drawImage(asset.el, asset.pos.x, asset.pos.y);
         }
-        
+
         img.onload = asset.draw;
         asset.initialized = true;
       }
     }
-    
+
     function avatar(x, y, w, keyCode, msg, colors) { // DRAW FULL AVATARS
       ctx.fillStyle = colors.skin; // skin
       rect(x, y, w, w);
@@ -357,7 +357,12 @@ function HomeCompCtrl(Auth, UserService) {
       var bubbleW, bubbleH, bubbleX, bubbleY;
       var marginW = bit,
           marginH = bit;
-      var maxMetricsW = ctx.measureText(words[0]).width;
+      var maxMetricsW = 0;
+
+      metrics = ctx.measureText(words[0]);
+      if (metrics < maxWidth) {
+        maxMetricsW = ctx.measureText(words[0]).width;
+      }
 
         for (var i = 0; i < words.length; i++) {
           test = words[i];
