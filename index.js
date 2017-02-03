@@ -16,7 +16,7 @@ var app = express();
 // mongoose models and connection
 var mongoose = require('mongoose');
 var User = require('./models/user');
-mongoose.connect('mongodb://localhost/chat');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/chat');
 
 var path = require('path');
 var http = require('http').Server(app);
