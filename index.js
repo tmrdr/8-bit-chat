@@ -110,11 +110,26 @@ io.on('connection', function(socket){
     });
   })
 
+  socket.on('slash command', function(playerData){
+    var args = playerData.msg.substr(1).split(" ");
+    var command = args[0];
+    args.shift();
+    if (command === "pee") {
+      var response = {
+        id: playerData.id,
+        pos: playerData.playerData.pos,
+        command: command,
+        args: args
+      };
+      io.emit('slash command', response);
+    }
+  });
   socket.on('chat message', function(playerData){
-    io.emit('chat message', {
+    var response = {
       id: playerData.id,
       msg: playerData.msg
-    });
+    };
+    io.emit('chat message', response);
   });
 
   socket.on('disconnect', function(){ // LATER SET THIS UP TO REMOVE OBJECT FROM PLAYER LIST BY KEY (PLAYER ID)
