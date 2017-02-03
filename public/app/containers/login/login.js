@@ -12,7 +12,6 @@ function LoginCompCtrl($scope, $state, UserService, Alerts) {
   };
 
   $scope.userLogin = function() {
-    console.log($scope.user);
     UserService.login($scope.user).then(function(user) {
       if (user !== false) {
 

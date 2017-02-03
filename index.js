@@ -125,20 +125,5 @@ io.on('connection', function(socket){
   });
 });
 
-
-// app.use(flash());
-//
-// app.use(function(req, res, next) {
-//     res.locals.alerts = req.flash();
-//     res.locals.currentUser = req.user;
-//     next();
-// });
-
-// });
-
-
-// http.listen(3000);
-
-// var server = app.listen(process.env.PORT || 3000);
 var server = http.listen(process.env.PORT || 3000)
 module.exports = server;

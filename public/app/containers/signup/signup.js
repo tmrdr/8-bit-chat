@@ -24,7 +24,7 @@ function SignupCompCtrl($scope, $state, UserService, Alerts) {
         console.log('user create error');
       } else {
         // console.log('got user:', signupComp.user);
-        Alerts.add('success', 'Sign up Successful! Please login with username/password.');
+        Alerts.add('success', 'Successful! Login with new username/password.');
         $state.go('login');
       };
     });
