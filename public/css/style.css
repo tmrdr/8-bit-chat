@@ -6,13 +6,15 @@
 }
 html,
 body {
+  background-color: #DDDDDD;
   height: 100%;
   font-family: 'Silkscreen', monospace;
 }
 
 footer {
+  text-align: center;
   margin: 20px;
-  height: 20px;
+  height: 70px;
 }
 
 .user-form {
@@ -68,9 +70,11 @@ footer {
 }
 
 .redtext {
-  font-family: Silkscreen;
   color: red;
-  text-decoration: none;
+}
+
+.headings, .chat-forms, .alerts, .instructions {
+  text-align: center;
 }
 
 #brand-logo {
@@ -91,7 +95,6 @@ footer {
 }
 
 .container {
-  text-align: center;
   margin: 0 auto;
 }
 
@@ -212,16 +215,30 @@ input {
   background-color: green;
 }
 
+.button-blue {
+  color: blue;
+  border-color: blue;
+}
+
+.button-blue:hover {
+  background-color: blue;
+}
+
 #delete-container {
+  text-align: right;
   position: absolute;
   bottom: 0;
   right: 0;
   margin: 0 25px 25px 0;
-  width: 250px;
+  width: 350px;
+}
+
+.delete-confirm {
+  margin-right: 50px;
 }
 
 #deleteYes {
   text-align: right;
-  font-size: .5em;
+  font-size: .25em;
   margin-bottom: 100px;
 }

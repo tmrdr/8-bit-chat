@@ -27,7 +27,8 @@ angular.module('ChatApp')
       }
       return $http(req).then(function(res) {
         Auth.saveToken(res.data.token);
-        Alerts.add('success', 'Logged in!');
+        // Alerts.add('success', 'Logged in!');
+        Alerts.add('success', ' ');
         return res.data.user;
       })
     },

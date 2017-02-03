@@ -19,17 +19,17 @@ var UserSchema = mongoose.Schema({
   topColor: {
     type: String,
     required: true,
-    default: "chocolate"
+    default: "#d2691e"
   },
   torsoColor: {
     type: String,
     required: true,
-    default: "red"
+    default: "#ff0000"
   },
   legsColor: {
     type: String,
     required: true,
-    default: "blue"
+    default: "#0000ff"
   }
 });
 

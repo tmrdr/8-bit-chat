@@ -12,6 +12,7 @@ angular.module('ChatApp')
   $scope.logout = function() {
     Auth.removeToken();
     Alerts.add('success', 'Logged out!');
-    $state.go('home');
+    window.location = "/"
+    // $state.go('home');
   }
 }])

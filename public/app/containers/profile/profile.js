@@ -12,9 +12,9 @@ function ProfileCompCtrl($state, Auth, UserService, Alerts) {
   profileComp.username = Auth.currentUser().name;
   profileComp.userSettings = {
     hairColor: 'black',
-    topColor: 'chocolate',
-    torsoColor: 'red',
-    legsColor: 'blue'
+    topColor: '#d2691e',
+    torsoColor: '#ff0000',
+    legsColor: '#0000ff'
   }
 
   UserService.getColors().then(function success(res) {
@@ -26,9 +26,9 @@ function ProfileCompCtrl($state, Auth, UserService, Alerts) {
   profileComp.changeAvatar = function() {
     var params = {
       hairColor: profileComp.userSettings.hairColor || 'black',
-      topColor: profileComp.userSettings.topColor || 'chocolate',
-      torsoColor: profileComp.userSettings.torsoColor || 'red',
-      legsColor: profileComp.userSettings.legsColor || 'blue'
+      topColor: profileComp.userSettings.topColor || '#d2691e',
+      torsoColor: profileComp.userSettings.torsoColor || '#ff0000',
+      legsColor: profileComp.userSettings.legsColor || '#0000ff'
     }
 
     var id = Auth.currentUser().id;

@@ -14,7 +14,7 @@ function HomeCompCtrl(Auth, UserService) {
 
   var yourColors = { // default colors
     hair: 'black',
-    skin: 'chocolate',
+    skin: '#d2691e',
     torso: 'red',
     legs: 'blue'
   };
@@ -345,7 +345,7 @@ function HomeCompCtrl(Auth, UserService) {
         lineCount++;
         bubbleW = maxMetricsW + marginW;
         bubbleH = lineCount * lineHeight + marginH;
-      
+
 
       bubbleX = x - bubbleW/2 - yourW/2;
       bubbleY = y - bubbleH - bit;
