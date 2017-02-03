@@ -7,8 +7,8 @@ angular.module('ChatApp')
 
 function HomeCompCtrl(Auth, UserService) {
   var homeComp = this;
-
-  homeComp.IsLoggedIn = Auth.currentUser();
+  console.log(Auth.getToken())
+  homeComp.IsLoggedIn = Auth.getToken();
 
   var socket = io();
 
@@ -317,10 +317,6 @@ function HomeCompCtrl(Auth, UserService) {
 
       metrics = ctx.measureText(text);
 
-      if (metrics.width <= maxWidth) {
-        bubbleW = metrics.width + marginW;
-        bubbleH = lineHeight + marginH;
-      } else {
         for (var i = 0; i < words.length; i++) {
           test = words[i];
           metrics = ctx.measureText(test);
@@ -349,7 +345,7 @@ function HomeCompCtrl(Auth, UserService) {
         lineCount++;
         bubbleW = maxMetricsW + marginW;
         bubbleH = lineCount * lineHeight + marginH;
-      }
+      
 
       bubbleX = x - bubbleW/2 - yourW/2;
       bubbleY = y - bubbleH - bit;
