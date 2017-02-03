@@ -5,9 +5,10 @@ angular.module('ChatApp')
   controllerAs: 'profileComp'
 });
 
-function ProfileCompCtrl(Auth, UserService) {
+function ProfileCompCtrl($state, Auth, UserService) {
   var profileComp = this;
   var deleteConfirm = false;
+
   profileComp.username = Auth.currentUser().name;
   profileComp.userSettings = {
     hairColor: 'black',
@@ -36,13 +37,21 @@ function ProfileCompCtrl(Auth, UserService) {
   }
 
   profileComp.deleteAccount = function() {
-    profileComp.deleteConfirm = false;
-  }
-
-  profileComp.confirmNo = function() {
     profileComp.deleteConfirm = true;
   }
 
+  profileComp.confirmNo = function() {
+    profileComp.deleteConfirm = false;
+  }
+
+  profileComp.confirmYes = function() {
+    UserService.deleteUser();
+    Auth.removeToken();
+    // Alerts.add('success', 'User Deleted!');
+    $state.go('home');
+    console.log('user deleted');
+  };
+
 }
 
-ProfileCompCtrl.$inject = ['Auth', 'UserService'];
+ProfileCompCtrl.$inject = ['$state', 'Auth', 'UserService'];

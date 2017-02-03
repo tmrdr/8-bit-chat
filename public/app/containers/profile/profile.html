@@ -20,16 +20,14 @@
     </form>
   </div>
   <div id="delete-container">
-    <div ng-show="deleteConfirm">
+    <div ng-show="profileComp.deleteConfirm">
       <h3 class="redtext">
         Are you sure you want to delete your account?
       </h3>
-      <span>
-      <button class="btn btn-success">OF COURSE DO NOT DELETE!</button>
-      <button class="btn btn-danger">Yes</button>
-      </span>
+      <button class="btn btn-success" ng-click="profileComp.confirmNo()">OF COURSE DO NOT DELETE!</button>
+      <button id="deleteYes" class="btn btn-danger" ng-click="profileComp.confirmYes()">yes</button>    
     </div>
-    <div ng-hide="deleteConfirm">
+    <div ng-hide="profileComp.deleteConfirm">
       <button class="btn btn-danger" ng-click="profileComp.deleteAccount()">Delete Account</button>
     </div>
   </div>
