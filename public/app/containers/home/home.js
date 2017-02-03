@@ -40,6 +40,7 @@ function HomeCompCtrl(Auth, UserService) {
     var ctx = $('#canvas')[0].getContext("2d");
     // players[socketID] = { x: __, y: __, facing: __, msg: __, colors: { hair: "#FFFFFF", skin: "#D2691E", torso: "#FF0000", legs: "#0000FF" } }
     var players = {}; // list of all connected players and relevant data
+    var assets = [];
     var yourId;
     var bit = 5; // size of one "pixel"
     var fontSize = bit*3;
@@ -131,6 +132,21 @@ function HomeCompCtrl(Auth, UserService) {
 
       redrawCanvas();
     });
+    
+    socket.on('slash command', function(data) {
+      players[data.id].msg = data.msg;
+      if (data.command === "pee") {
+        pos = data.pos;
+        pos.y += yourW*3;
+        asset = {
+          img: 'img/pee.png',
+          pos: pos
+        }
+        assets.push(asset);
+      }
+      redrawCanvas();
+    });
+
 
     socket.on('disconnect', function(player) {
       console.log('disconnected:', player.id);
@@ -171,12 +187,19 @@ function HomeCompCtrl(Auth, UserService) {
 
     homeComp.chatSubmit = function() {
       clearTimeout(messageTimeout);
-
       var message = event.target.chat.value;
-      socket.emit('chat message', {
-        id: yourId,
-        msg: message
-      });
+      if (message[0] === '/') {
+        socket.emit('slash command', {
+          id: yourId,
+          msg: message,
+          playerData: players[yourId]
+        });
+      } else {
+        socket.emit('chat message', {
+          id: yourId,
+          msg: message
+        });
+      }
 
       event.target.chat.value = ''; // clear message from text input
 
@@ -251,11 +274,16 @@ function HomeCompCtrl(Auth, UserService) {
       if($('#canvas')[0]) { // run only if the canvas element exists
         // console.log(players);
         ctx.clearRect(0, 0, canvas.width, canvas.height); // clears the entire canvas
+        
+        // draw assets under everything else.
+        assets.forEach(drawAsset);
+        
         var assetRenderOrder = []; // avatars are to be layered according to their y coordinate
         assetRenderOrder = Object.keys(players).sort(function(a,b){return players[a].pos.y-players[b].pos.y});
         assetRenderOrder.forEach(function(id) {
           avatar(players[id].pos.x, players[id].pos.y, yourW, players[id].facing, players[id].msg, players[id].colors);
         });
+        
 
         ctx.fillStyle = "red";
         // ctx.font = "10px Silkscreen";
@@ -270,6 +298,23 @@ function HomeCompCtrl(Auth, UserService) {
       ctx.fill();
     }
 
+    function drawAsset(asset) {
+      if (asset.loaded) {
+        asset.draw();
+      } else if (!asset.initialized) {
+        var img = document.createElement("img");
+        asset.el = img;
+        asset.el.src = asset.img;
+        asset.draw = function() {
+          asset.loaded = true;
+          ctx.drawImage(asset.el, asset.pos.x, asset.pos.y);
+        }
+        
+        img.onload = asset.draw;
+        asset.initialized = true;
+      }
+    }
+    
     function avatar(x, y, w, keyCode, msg, colors) { // DRAW FULL AVATARS
       ctx.fillStyle = colors.skin; // skin
       rect(x, y, w, w);
