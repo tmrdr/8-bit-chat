@@ -46,12 +46,13 @@ function ProfileCompCtrl($state, Auth, UserService, Alerts) {
 
   profileComp.confirmYes = function() {
     UserService.deleteUser().then(function success(res) {
-      Auth.removeToken()
+      Auth.removeToken();
+      window.location = "/"
     },function error(res) {
       console.log(res);
     });
     Alerts.add('success', 'User Deleted!');
-    $state.go('home');
+
     console.log('user deleted');
   };
 
