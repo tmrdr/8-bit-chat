@@ -9,6 +9,11 @@ body {
   font-family: 'Silkscreen', monospace;
 }
 
+footer {
+  margin: 5px;
+  height: 20px;
+}
+
 #chat-form {
   margin: 10px;
 }
