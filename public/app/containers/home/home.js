@@ -332,7 +332,10 @@ function HomeCompCtrl(Auth, UserService) {
           console.log("line:", line, "metrics:", metrics.width, "maxMetricsW:", maxMetricsW);
 
           if (metrics.width > maxWidth && i > 0) {
-            maxMetricsW = ctx.measureText(line).width;
+            metrics = ctx.measureText(line);
+            if (metrics.width > maxMetricsW) {
+              maxMetricsW = metrics.width;
+            }
             line = words[i] + ' ';
             lineCount++;
           } else {
