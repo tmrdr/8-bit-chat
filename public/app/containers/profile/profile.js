@@ -33,6 +33,7 @@ function ProfileCompCtrl($state, Auth, UserService, Alerts) {
 
     var id = Auth.currentUser().id;
     UserService.updateColors(id, params);
+    $state.go('home');
   }
 
   profileComp.deleteAccount = function() {

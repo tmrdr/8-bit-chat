@@ -7,7 +7,7 @@ angular.module('ChatApp')
 
 function SignupCompCtrl($scope, $state, UserService, Alerts) {
   signupComp = this;
-  Alerts.add('success', ' ');  // Clears any previous alerts
+  Alerts.add('success', ' ');  // Clears any previous alerts on load
   signupComp.user = {
     name: '',
     password: ''
