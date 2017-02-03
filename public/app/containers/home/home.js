@@ -29,7 +29,6 @@ function HomeCompCtrl(Auth, UserService) {
         torso: homeComp.userSettings.torsoColor,
         legs: homeComp.userSettings.legsColor
       }
-      // homeComp.$onInit();
     }, function error(res) {
       console.log(res);
     });
@@ -296,8 +295,7 @@ function HomeCompCtrl(Auth, UserService) {
       }
 
       if (msg !== "" && msg !== undefined) { // if message is not empty
-        // wrapText(msg, x+w, y, 100, fontSize); // render message
-        speechBubble(msg, x+w, y, 100, fontSize);
+        speechBubble(msg, x+w, y, 100, fontSize); // render message in bubble
       }
 
     }
@@ -331,7 +329,10 @@ function HomeCompCtrl(Auth, UserService) {
           test = line + words[i] + ' ';
           metrics = ctx.measureText(test);
 
+          console.log("line:", line, "metrics:", metrics.width, "maxMetricsW:", maxMetricsW);
+
           if (metrics.width > maxWidth && i > 0) {
+            maxMetricsW = ctx.measureText(line).width;
             line = words[i] + ' ';
             lineCount++;
           } else {
