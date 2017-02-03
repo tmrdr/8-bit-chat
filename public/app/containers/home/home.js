@@ -312,7 +312,7 @@ function HomeCompCtrl(Auth, UserService) {
           metrics;
 
       var bubbleW, bubbleH, bubbleX, bubbleY;
-      var marginW = 2*bit,
+      var marginW = bit,
           marginH = bit;
       var maxMetricsW = ctx.measureText(words[0]).width;
 
