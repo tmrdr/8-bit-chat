@@ -1,15 +1,15 @@
 <div class="container">
-  <h1 class="redtext">your profile</h1>
-  <h2 class="redtext">{{profileComp.username}}</h2>
+  <h1 class="redtext headings">your profile</h1>
+  <h2 class="redtext headings">{{profileComp.username}}</h2>
   <div id="avatar-container" class="profile-container">
     <div class="person">
-        <div class="hair" ng-style="{'background-color': profileComp.userSettings.hairColor}"></div>
-        <div class="top" ng-style="{'background-color': profileComp.userSettings.topColor}">
-            <div id="left" class="eyes"></div>
-            <div id="right" class="eyes"></div>
-        </div>
-        <div class="torso" ng-style="{'background-color': profileComp.userSettings.torsoColor}"></div>
-        <div class="legs" ng-style="{'background-color': profileComp.userSettings.legsColor}"></div>
+      <div class="hair" ng-style="{'background-color': profileComp.userSettings.hairColor}"></div>
+      <div class="top" ng-style="{'background-color': profileComp.userSettings.topColor}">
+        <div id="left" class="eyes"></div>
+        <div id="right" class="eyes"></div>
+      </div>
+      <div class="torso" ng-style="{'background-color': profileComp.userSettings.torsoColor}"></div>
+      <div class="legs" ng-style="{'background-color': profileComp.userSettings.legsColor}"></div>
     </div>
 
     <div class="customizer">
@@ -21,6 +21,9 @@
       </form>
     </div>
   </div>
+  <div class="instructions">
+    <p>Customize your avatar's colors!</p>
+  </div>
 
   <div id="delete-container">
     <div ng-show="profileComp.deleteConfirm">
@@ -29,11 +32,10 @@
       </h3>
       <button class="button button-green" ng-click="profileComp.confirmNo()">OF COURSE NOT. DO NOT DELETE!</button>
       <button id="deleteYes" class="button button-red" ng-click="profileComp.confirmYes()">yes</button>
-
     </div>
+
     <div ng-hide="profileComp.deleteConfirm">
       <button class="button button-red" ng-click="profileComp.deleteAccount()">Delete Account</button>
     </div>
   </div>
-
 </div>

@@ -10,8 +10,9 @@ body {
 }
 
 footer {
-  margin: 5px;
-  height: 20px;
+  text-align: center;
+  margin: 30px 5px 5px 5px;
+  height: 120px;
 }
 
 #chat-form {
@@ -54,9 +55,12 @@ footer {
 }
 
 .redtext {
-  font-family: Silkscreen;
   color: red;
-  text-decoration: none;
+  /*text-decoration: none;*/
+}
+
+.headings, .chat-forms, .alerts, .instructions {
+  text-align: center;
 }
 
 #brand-logo {
@@ -77,7 +81,7 @@ footer {
 }
 
 .container {
-  text-align: center;
+  /*text-align: center;*/
   margin: 0 auto;
 }
 
@@ -196,6 +200,15 @@ input {
 
 .button-green:hover {
   background-color: green;
+}
+
+.button-blue {
+  color: blue;
+  border-color: blue;
+}
+
+.button-blue:hover {
+  background-color: blue;
 }
 
 #delete-container {

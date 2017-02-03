@@ -1,5 +1,5 @@
-<div id="chat-container" class="container">
-  <h1 class="redtext">8-bit chat</h1>
+<div class="chat-forms" id="chat-container" class="container">
+  <h1 class="redtext headings">8-bit chat</h1>
   <canvas id="canvas" width="900" height="500" ></canvas>
   <form id="chat-form" ng-submit="homeComp.chatSubmit()" ng-if="homeComp.IsLoggedIn">
     <input type="text" maxlength="50" name="chat" value="" placeholder="Enter message">
@@ -7,7 +7,7 @@
   </form>
   <div id="messages" class="hidden"></div>
 
-  <div ng-if="!homeComp.IsLoggedIn">
+  <div class="instructions" ng-if="!homeComp.IsLoggedIn">
     <p>Press the arrow keys! Login to chat!</p>
   </div>
 

@@ -1,5 +1,4 @@
 <nav class="navbar navbar-default" role="navigation" ng-controller="NavCtrl">
-  <!-- Brand and toggle get grouped for better mobile display -->
   <div class="navbar-header">
     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-ex1-collapse">
       <span class="sr-only">Toggle navigation</span>
@@ -7,16 +6,16 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand redtext" ui-sref="home()">8 Bit Chat</a>
+    <a class="navbar-brand" ui-sref="home()">8 Bit Chat</a>
   </div>
 
   <!-- Collect the nav links, forms, and other content for toggling -->
   <div class="collapse navbar-collapse navbar-ex1-collapse">
     <ul class="nav navbar-nav navbar-right">
-      <li><a ui-sref="signup()" ng-hide="Auth.isLoggedIn()" class="redtext">Signup</a></li>
-      <li><a ui-sref="login()" ng-hide="Auth.isLoggedIn()" class="redtext">Login</a></li>
+      <li><a ui-sref="signup()" ng-hide="Auth.isLoggedIn()">Signup</a></li>
+      <li><a ui-sref="login()" ng-hide="Auth.isLoggedIn()">Login</a></li>
       <li>
-        <a ui-sref="profile()" ng-show="Auth.isLoggedIn()" class="redtext">
+        <a ui-sref="profile()" ng-show="Auth.isLoggedIn()">
           <div id="bit-face" ng-style="{'background-color': userSettings.topColor}">
             <div id="bit-hair" ng-style="{'background-color': userSettings.hairColor}"></div>
             <div id="bit-eye-left" class="bit-eye"></div>
@@ -24,8 +23,8 @@
           </div>
         </a>
       </li>
-      <li><a ui-sref="profile()" ng-show="Auth.isLoggedIn()" class="redtext">Profile</a></li>
-      <li><a href ng-click="logout()" ng-show="Auth.isLoggedIn()" class="redtext">Logout</a></li>
+      <li><a ui-sref="profile()" ng-show="Auth.isLoggedIn()">Profile</a></li>
+      <li><a href ng-click="logout()" ng-show="Auth.isLoggedIn()">Logout</a></li>
     </ul>
-  </div><!-- /.navbar-collapse -->
+  </div>
 </nav>
