@@ -220,15 +220,20 @@ input {
 }
 
 #delete-container {
+  text-align: right;
   position: absolute;
   bottom: 0;
   right: 0;
   margin: 0 25px 25px 0;
-  width: 250px;
+  width: 350px;
+}
+
+.delete-confirm {
+  margin-right: 50px;
 }
 
 #deleteYes {
   text-align: right;
-  font-size: .5em;
+  font-size: .25em;
   margin-bottom: 100px;
 }

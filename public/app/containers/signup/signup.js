@@ -7,6 +7,7 @@ angular.module('ChatApp')
 
 function SignupCompCtrl($scope, $state, UserService, Alerts) {
   signupComp = this;
+  Alerts.add('success', ' ');  // Clears any previous alerts
   signupComp.user = {
     name: '',
     password: ''
@@ -24,7 +25,7 @@ function SignupCompCtrl($scope, $state, UserService, Alerts) {
         console.log('user create error');
       } else {
         // console.log('got user:', signupComp.user);
-        Alerts.add('success', 'Successful! Login with new username/password.');
+        Alerts.add('success', 'Successful! Now login with new username/password.');
         $state.go('login');
       };
     });
