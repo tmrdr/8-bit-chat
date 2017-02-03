@@ -27,11 +27,12 @@
       <h3 class="redtext">
         Are you sure you want to delete your account?
       </h3>
-      <button class="btn btn-success" ng-click="profileComp.confirmNo()">OF COURSE DO NOT DELETE!</button>
-      <button id="deleteYes" class="btn btn-danger" ng-click="profileComp.confirmYes()">yes</button>
+      <button class="button button-green" ng-click="profileComp.confirmNo()">OF COURSE NOT. DO NOT DELETE!</button>
+      <button id="deleteYes" class="button button-red" ng-click="profileComp.confirmYes()">yes</button>
+
     </div>
     <div ng-hide="profileComp.deleteConfirm">
-      <button class="btn btn-danger" ng-click="profileComp.deleteAccount()">Delete Account</button>
+      <button class="button button-red" ng-click="profileComp.deleteAccount()">Delete Account</button>
     </div>
   </div>
 

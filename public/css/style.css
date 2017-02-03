@@ -190,6 +190,24 @@ input {
   background-color: black;
 }
 
+.button-red {
+  color: red;
+  border-color: red;
+}
+
+.button-red:hover {
+  background-color: red;
+}
+
+.button-green {
+  color: green;
+  border-color: green;
+}
+
+.button-green:hover {
+  background-color: green;
+}
+
 #delete-container {
   position: absolute;
   bottom: 0;
