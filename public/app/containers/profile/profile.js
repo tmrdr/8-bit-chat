@@ -5,7 +5,7 @@ angular.module('ChatApp')
   controllerAs: 'profileComp'
 });
 
-function ProfileCompCtrl($state, Auth, UserService) {
+function ProfileCompCtrl($state, Auth, UserService, Alerts) {
   var profileComp = this;
   var deleteConfirm = false;
 
@@ -45,13 +45,16 @@ function ProfileCompCtrl($state, Auth, UserService) {
   }
 
   profileComp.confirmYes = function() {
-    UserService.deleteUser();
-    Auth.removeToken();
-    // Alerts.add('success', 'User Deleted!');
+    UserService.deleteUser().then(function success(res) {
+      Auth.removeToken()
+    },function error(res) {
+      console.log(res);
+    });
+    Alerts.add('success', 'User Deleted!');
     $state.go('home');
     console.log('user deleted');
   };
 
 }
 
-ProfileCompCtrl.$inject = ['$state', 'Auth', 'UserService'];
+ProfileCompCtrl.$inject = ['$state', 'Auth', 'UserService', 'Alerts'];
