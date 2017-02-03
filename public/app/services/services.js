@@ -14,7 +14,6 @@ angular.module('ChatApp')
           console.log('couldnot create user', res.data.message);
           return false;
         }
-        console.log('User Create response:', res.data);
         return res.data;
       }, function error(res) {
         console.log('error response:', res);
@@ -27,7 +26,6 @@ angular.module('ChatApp')
         data: params
       }
       return $http(req).then(function(res) {
-        console.log('got network:', res);
         Auth.saveToken(res.data.token);
         Alerts.add('success', 'Logged in!');
         return res.data.user;
@@ -45,7 +43,6 @@ angular.module('ChatApp')
           console.log('didnt work', res.data.message);
           return false;
         }
-        console.log('User Updated', res.data);
         return res.data;
       }, function error(res) {
         console.log('error response:', res);
