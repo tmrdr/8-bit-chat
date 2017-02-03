@@ -11,8 +11,9 @@ body {
 }
 
 footer {
+  text-align: center;
   margin: 20px;
-  height: 20px;
+  height: 70px;
 }
 
 .user-form {
