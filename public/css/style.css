@@ -5,6 +5,10 @@
   /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
 }
 
+body {
+  font-family: Silkscreen;
+}
+
 .redtext {
   font-family: Silkscreen;
   color: red;
@@ -130,6 +134,24 @@ input {
   color: white;
   border: 2px solid white;
   background-color: black;
+}
+
+.button-red {
+  color: red;
+  border-color: red;
+}
+
+.button-red:hover {
+  background-color: red;
+}
+
+.button-green {
+  color: green;
+  border-color: green;
+}
+
+.button-green:hover {
+  background-color: green;
 }
 
 #delete-container {
