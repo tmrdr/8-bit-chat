@@ -6,20 +6,15 @@
 }
 
 html {
-  background-color: #75C2E6;
-  height: 100vm;
+  background-color: #DDDDDD;
+  height: 100%;
 }
 
 body {
   height: 100%;
-  background-color: #75C2E6;
+  background-color: #DDDDDD;
   font-family: 'Silkscreen', monospace;
-}
-
-.view-container {
-  background-color: #75C2E6;
-  background: url('../img/PIXILART-BKGD.png') repeat-x left bottom;
-  background-size: 25%;
+  /*background-color: #75C2E6;*/
 }
 
 #chat-form {
@@ -30,8 +25,11 @@ body {
   padding: 7px;
 }
 
-.footer-container {
-  background-color: #3D3B39;
+.view-container {
+  padding: 20px;
+  /*background: url('../img/PIXILART-BKGD.png') repeat-x left bottom;*/
+  /*background-attachment: fixed;*/
+  /*background-size: 25%;*/
 }
 
 .footer-container a {
@@ -41,13 +39,13 @@ body {
 
 .footer-container a:hover {
   text-decoration: none;
-  color: #DDDDDD;
+  /*color: #DDDDDD;*/
 }
 
 footer {
   text-align: center;
   padding: 40px;
-  height: 40px;
+  height: 20px;
 }
 
 .user-form {
@@ -100,6 +98,10 @@ footer {
 
 .headings, .chat-forms, .alerts, .instructions {
   text-align: center;
+}
+
+.instructions p {
+  color: black;
 }
 
 #brand-logo {
