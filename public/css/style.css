@@ -6,26 +6,26 @@
 }
 
 html, body {
-  background-color: #DDDDDD;
+  background-color: skyblue;
   height: 100%;
 }
 
 body {
   font-family: 'Silkscreen', monospace;
-  /*background-color: #75C2E6;*/
 }
 
 #wrapper {
   min-height: 100%;
-  position:relative;
+  position: relative;
+  background-color: #75C2E6;
+  background: url('../img/PIXILART-BKGD-THICK.png') repeat-x left bottom;
+  /*background-attachment: fixed;*/
+  background-size: 25%;
 }
 
 .view-container {
   padding: 20px;
   padding-bottom: 20px; /* Height of the footer */
-  /*background: url('../img/PIXILART-BKGD.png') repeat-x left bottom;*/
-  /*background-attachment: fixed;*/
-  /*background-size: 25%;*/
 }
 
 .footer-container {
@@ -48,6 +48,7 @@ body {
 footer {
   text-align: center;
   padding: 40px;
+    background-color: #3D3B39;
 }
 
 .navbar {
@@ -98,7 +99,7 @@ footer {
 }
 
 .instructions p {
-  color: black;
+  color: gray;
 }
 
 #brand-logo {
@@ -124,7 +125,22 @@ footer {
 
 .user-form {
   margin: 50px auto 70px;
-  width: 400px;
+  width: 25%;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid #AAAAAA;
+}
+
+.login-form {
+  padding-bottom: 30px;
+}
+
+.profile-container {
+  margin: 50px auto 70px;
+  width: 30%;
+  padding: 10px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1px solid #AAAAAA;
 }
 
 .person {
