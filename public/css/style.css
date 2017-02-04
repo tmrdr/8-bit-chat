@@ -5,31 +5,34 @@
   /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
 }
 
-html {
+html, body {
   background-color: #DDDDDD;
   height: 100%;
 }
 
 body {
-  height: 100%;
-  background-color: #DDDDDD;
   font-family: 'Silkscreen', monospace;
   /*background-color: #75C2E6;*/
 }
 
-#chat-form {
-  padding: 10px;
-}
-
-#chat-form input[type="text"] {
-  padding: 7px;
+#wrapper {
+  min-height: 100%;
+  position:relative;
 }
 
 .view-container {
   padding: 20px;
+  padding-bottom: 20px; /* Height of the footer */
   /*background: url('../img/PIXILART-BKGD.png') repeat-x left bottom;*/
   /*background-attachment: fixed;*/
   /*background-size: 25%;*/
+}
+
+.footer-container {
+  width: 100%;
+  height: 20px; /* Height of the footer */
+	position: absolute;
+	bottom: 0;
 }
 
 .footer-container a {
@@ -45,12 +48,6 @@ body {
 footer {
   text-align: center;
   padding: 40px;
-  height: 20px;
-}
-
-.user-form {
-  margin: 50px auto 70px;
-  width: 400px;
 }
 
 .navbar {
@@ -115,6 +112,19 @@ footer {
   border: 1px solid black;
   background-color: beige;
   background-image: url('../img/genericRecRoomFurnishedbar.png');
+}
+
+#chat-form {
+  padding: 10px;
+}
+
+#chat-form input[type="text"] {
+  padding: 7px;
+}
+
+.user-form {
+  margin: 50px auto 70px;
+  width: 400px;
 }
 
 .person {
