@@ -12,9 +12,22 @@ html {
 
 body {
   height: 100%;
+  background-color: #75C2E6;
   font-family: 'Silkscreen', monospace;
+}
+
+.view-container {
+  background-color: #75C2E6;
   background: url('../img/PIXILART-BKGD.png') repeat-x left bottom;
   background-size: 25%;
+}
+
+#chat-form {
+  padding: 10px;
+}
+
+#chat-form input[type="text"] {
+  padding: 7px;
 }
 
 .footer-container {
@@ -33,7 +46,7 @@ body {
 
 footer {
   text-align: center;
-  margin: 20px 20px 0;
+  padding: 40px;
   height: 40px;
 }
 
@@ -44,14 +57,6 @@ footer {
 
 .navbar {
   border-radius: 0;
-}
-
-#chat-form {
-  margin: 10px;
-}
-
-#chat-form input[type="text"] {
-  padding: 7px;
 }
 
 #bit-face {
