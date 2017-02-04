@@ -4,11 +4,18 @@
   url('slkscr.ttf') format('truetype');
   /* Chrome 4+, Firefox 3.5, Opera 10+, Safari 3—5 */
 }
-html,
-body {
+
+html {
   background-color: #DDDDDD;
   height: 100%;
+}
+
+body {
+  height: 100%;
   font-family: 'Silkscreen', monospace;
+  background-color: #DDDDDD;
+  /*background-color: #75C2E6;
+  background: url('../img/PIXILART-BKGD.png') repeat-x left bottom;*/
 }
 
 footer {
