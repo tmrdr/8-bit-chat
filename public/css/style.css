@@ -17,7 +17,6 @@ body {
 #wrapper {
   min-height: 100%;
   position: relative;
-  background-color: #75C2E6;
   background: url('../img/PIXILART-BKGD-THICK.png') repeat-x left bottom;
   /*background-attachment: fixed;*/
   background-size: 25%;
