@@ -6,22 +6,35 @@
 }
 
 html {
-  background-color: #DDDDDD;
+  background-color: #75C2E6;
   height: 100%;
 }
 
 body {
   height: 100%;
   font-family: 'Silkscreen', monospace;
-  background-color: #DDDDDD;
-  /*background-color: #75C2E6;
-  background: url('../img/PIXILART-BKGD.png') repeat-x left bottom;*/
+  background: url('../img/PIXILART-BKGD.png') repeat-x left bottom;
+  background-size: 25%;
+}
+
+.footer-container {
+  background-color: #3D3B39;
+}
+
+.footer-container a {
+  color: black;
+  padding: 0 3px;
+}
+
+.footer-container a:hover {
+  text-decoration: none;
+  color: #DDDDDD;
 }
 
 footer {
   text-align: center;
-  margin: 20px;
-  height: 70px;
+  margin: 20px 20px 0;
+  height: 40px;
 }
 
 .user-form {
