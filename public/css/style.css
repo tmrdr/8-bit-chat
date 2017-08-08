@@ -279,14 +279,24 @@ input {
 #delete-container {
   text-align: right;
   position: absolute;
-  bottom: 0;
-  right: 0;
-  margin: 0 25px 25px 0;
-  width: 350px;
+  bottom: 50px;
+  right: 15px;
+  /*margin: 0 25px 25px 0;*/
+  padding: 10px;
+  /*width: 350px;*/
+  /*width: auto;*/
+  /*height: auto;*/
 }
 
-.delete-confirm {
-  margin-right: 50px;
+#delete-container .delete-confirm {
+  position: absolute;
+  width: 306px;
+  height: 200px;
+  /*margin-right: 50px;*/
+  bottom: 280px;
+  right: 110px;
+  padding: 18px;
+  background-color: rgba(255, 255, 255, 0.7);
 }
 
 #deleteYes {
