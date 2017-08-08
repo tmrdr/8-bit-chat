@@ -38,28 +38,24 @@ function HomeCompCtrl(Auth, UserService) {
 /* ---------------------------- CHAT FUNCTIONALITY -------------------------- */
   /* ---------------------------------------------- SOME INITIALIZATION STUFF */
     var ctx = $('#canvas')[0].getContext("2d");
+
     // players[socketID] = { x: __, y: __, facing: __, msg: __, colors: { hair: "#FFFFFF", skin: "#D2691E", torso: "#FF0000", legs: "#0000FF" } }
-    var players = {}; // list of all connected players and relevant data
-    var assets = [];
-    var yourId;
-    var bit = 5; // size of one "pixel"
-    var fontSize = bit*3;
-    var messageTimeout;
-    var yourW = bit*4; // avatar width
-    var yourH = yourW*3; // avatar height
-    var spawnPosition = {
-      x: canvas.width/2 - yourW/2,
-      y: canvas.height/2 - yourH/2
-    }
-    var spawnFacing = 40;
-    // var yourColors = {
-    //   hair: homeComp.userSettings.hairColor,
-    //   skin: homeComp.userSettings.topColor,
-    //   torso: homeComp.userSettings.torsoColor,
-    //   legs: homeComp.userSettings.legsColor
-    // }
-    console.log('yourColors:', yourColors);
-    var yourGait = bit; // player data increment
+    var players = {}, // list of all connected players and relevant data
+        assets = [],
+        yourId,
+        messageTimeout;
+
+    var bit = 5, // size of one "pixel"
+        fontSize = bit*3,
+        yourW = bit*4, // avatar width
+        yourH = yourW*3, // avatar height
+        spawnFacing = 40,
+        spawnPosition = {
+          x: canvas.width/2 - yourW/2,
+          y: canvas.height/2 - yourH/2
+        };
+
+    var yourGait = bit; // avatar moves this much with each arrow key press
 
   /* ---------------------------------------------- SOCKET.IO EVENT LISTENERS */
     socket.on('connect', function() {
@@ -68,7 +64,7 @@ function HomeCompCtrl(Auth, UserService) {
       yourId = socket.id.substring(2, socket.id.length);
       addPlayer(yourId, spawnPosition, spawnFacing, "", yourColors);
 
-      socket.emit('newPlayer', {
+      socket.emit('new player', {
         id: yourId,
         pos: {
           x: spawnPosition.x,
@@ -81,23 +77,23 @@ function HomeCompCtrl(Auth, UserService) {
 
       // make sure emit parameters corresponds with the way back-end socket.io sets it up
 
-      socket.emit('readyForPlayers');
+      socket.emit('ready for players');
       // console.log('player ready:', yourId, players[yourId]);
     });
 
-    socket.on('givePlayersList', function(playerList) {
-      // console.log('givePlayersList event:', playerList)
+    socket.on('give player list', function(playerList) {
+      // console.log('give player list event:', playerList)
       for (var i=0; i<playerList.length; i++) {
         var id = playerList[i].substring(2, playerList[i].length);
         if (id !== socket.id) {
           addPlayer(id, spawnPosition, spawnFacing, "", yourColors);
         }
       }
-      // console.log("givePlayersList:", players);
+      // console.log("give player list:", players);
       redrawCanvas();
     });
 
-    socket.on('newPlayer', function(newPlayer) { // did a new player join?
+    socket.on('new player', function(newPlayer) { // did a new player join?
       // console.log('newPlayer event:', newPlayer);
       addPlayer(newPlayer.id, newPlayer.pos, newPlayer.facing, "", newPlayer.colors);
 
@@ -242,30 +238,28 @@ function HomeCompCtrl(Auth, UserService) {
     }
 
     function arrowKeyDown(keyCode) {
-      if (keyCode >= 37 && keyCode <= 40) { // ONLY ARROW KEYS MODIFY YOUR COORDINATES
-        players[yourId].facing = keyCode;
-        switch(keyCode) {
-          case 37: // left arrow: keyCode 37
-            if (players[yourId].pos.x > 0) {
-              players[yourId].pos.x -= yourGait;
-            }
-            break;
-          case 38: // up arrow: keyCode 38
-            if (players[yourId].pos.y > 0) {
-              players[yourId].pos.y -= yourGait;
-            }
-            break;
-          case 39: // right arrow: keyCode 39
-            if (players[yourId].pos.x+yourW < canvas.width) {
-              players[yourId].pos.x += yourGait;
-            }
-            break;
-          case 40: // down arrow: keyCode 40
-            if (players[yourId].pos.y+yourH < canvas.height) {
-              players[yourId].pos.y += yourGait;
-            }
-            break;
-        }
+      players[yourId].facing = keyCode;
+      switch(keyCode) {
+        case 37: // left arrow: keyCode 37
+          if (players[yourId].pos.x > 0) {
+            players[yourId].pos.x -= yourGait;
+          }
+          break;
+        case 38: // up arrow: keyCode 38
+          if (players[yourId].pos.y > 0) {
+            players[yourId].pos.y -= yourGait;
+          }
+          break;
+        case 39: // right arrow: keyCode 39
+          if (players[yourId].pos.x+yourW < canvas.width) {
+            players[yourId].pos.x += yourGait;
+          }
+          break;
+        case 40: // down arrow: keyCode 40
+          if (players[yourId].pos.y+yourH < canvas.height) {
+            players[yourId].pos.y += yourGait;
+          }
+          break;
       }
     }
 

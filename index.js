@@ -71,9 +71,9 @@ app.get('/*', function(req, res){
 // socket
 io.on('connection', function(socket){
   console.log('user connected:', socket.client.id);
-  socket.on('newPlayer', function(newPlayerData) {
+  socket.on('new player', function(newPlayerData) {
     console.log("new player:", newPlayerData);
-    socket.broadcast.emit('newPlayer', {
+    socket.broadcast.emit('new player', {
       id: newPlayerData.id,
       pos: newPlayerData.pos,
       facing: newPlayerData.facing,
@@ -82,11 +82,11 @@ io.on('connection', function(socket){
     });
   });
 
-  socket.on('readyForPlayers', function() {
-    // console.log('readyForPlayers fired');
+  socket.on('ready for players', function() {
+    // console.log('ready for players fired');
     io.of('/').clients(function(error, clients) {
-      console.log("givePlayersList:", clients);
-      socket.emit('givePlayersList', clients);
+      console.log("give player list:", clients);
+      socket.emit('give player list', clients);
     });
   });
 
